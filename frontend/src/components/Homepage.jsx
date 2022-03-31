@@ -28,7 +28,6 @@ export const Homepage = () => {
                     <p id="p_reg" className="h6 text-center"><a id="reg_acc" href="#">REGISTER AN ACCOUNT</a></p>
                 </div>
             </div>
-           
         </div>
     </div>
   )
