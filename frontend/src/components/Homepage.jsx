@@ -1,9 +1,16 @@
 import React from 'react';
 import "../css/homepage.css";
-import logo from "../images/sx logo 3.jpg"
+import logo from "../images/sx logo 3.jpg";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
-export const Homepage = () => {
+
+
+export const Homepage = ({ to }) => {
+
+    const navigateToSignUp = useNavigate();
+
   return (
     <div>
          <div className="main_container">
@@ -25,11 +32,15 @@ export const Homepage = () => {
                             <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SIGN IN</button>
                         </div>
                     </form>
-                    <p id="p_reg" className="h6 text-center"><a id="reg_acc" href="#">REGISTER AN ACCOUNT</a></p>
+
+                    <p id="p_reg" className="h6 text-center">
+                        <a id="reg_acc" href="" onClick={() => { navigateToSignUp(`/SignUp`) }}>REGISTER AN ACCOUNT </a>
+                        </p>
                 </div>
             </div>
            
         </div>
     </div>
   )
-}
+};
+export default Homepage
