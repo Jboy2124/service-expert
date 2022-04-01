@@ -65,10 +65,6 @@
   font-size: 14px;
 }
 
-#reg_acc:hover {
-  border-bottom: 2px solid white;
-  transition: 1s;
-}
 #copyright {
   background-color: #435466;
   height: 4vh;

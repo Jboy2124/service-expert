@@ -29,7 +29,7 @@ export const Homepage = ({ to }) => {
                             <input type="password" className="form-control" id="floatingPassword" placeholder="Password" required/>
                         </div><br/>
                         <div className="submit_center">
-                            <button id="login_submit_button" onClick={() => { navigateToDashBoard(`/SideBar`) }}type="submit" className="btn btn-warning mb-3">SIGN IN</button>
+                            <button id="login_submit_button" onClick={() => { navigateToDashBoard(`/RightDashUser`) }}type="submit" className="btn btn-warning mb-3">SIGN IN</button>
                         </div>
                     </form>
 

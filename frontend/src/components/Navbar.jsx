@@ -14,7 +14,7 @@ const Navbar = () => {
     <div>
        <div className="row noMargin">
                <div id="navBarDashLogo" className="col-4">
-                   {/* <img className="" id=""src={logo} alt="" />  */}
+                   <img className="" id=""src={logo} alt="" /> 
                </div>
                <div id="navBarDashLogo" className="col-8 d-flex justify-content-end px-5">
                     <ul class="list-inline pt-3">
@@ -24,7 +24,7 @@ const Navbar = () => {
                         <li class="list-inline-item px-2"><i class="bi bi-person-circle"></i> {fullName}</li>
                         <li class="list-inline-item px-3">{role}</li>
                         <li class="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {
-                        navigateHomepage("/SignUp")
+                        navigateHomepage("/")
                     }}>LOGOUT</a></li>
                     </ul>                  
                </div>
