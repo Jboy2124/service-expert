@@ -1,3 +1,7 @@
+*{
+    font-family: "Prompt", sans-serif;
+}
+
 #navBarLogo{
     height: 60px;
     width: 150px; 
@@ -5,7 +9,6 @@
 #navBarDashLogo{
     background-color: #435466;
     color: white;
-    font-family: "Prompt", sans-serif
 }
 
 #sideBarDash{
@@ -15,7 +18,6 @@
 }
 
 #sideBarLinks a{
-    font-family: "Prompt", sans-serif;
     margin-left: 20px;
     color: #f0f4fc;
 }
@@ -31,4 +33,13 @@
 .buttonStyleGlobal{
     background-color: #ff914a;
     color: white;
+}
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 591px;
+    }
+}
+
+.card {
+    background-color: transparent;
 }
