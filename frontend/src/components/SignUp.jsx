@@ -6,18 +6,18 @@ import Footer from './Footer';
 
 const SignUp = () => {
     const navigateHomepage = useNavigate();
-  
+    
 
   return (
     <div>
-        <div className="main_container">
+        <div className="signup_main_container">
             <div id="row_noMargin" className="row">
                 <div id="signup_logo_container" className="col-sm-12">
                     <img id="signup_logo" src={logo} />
                 </div>
             </div>
             <div id="row_noMargin" className="row ">
-                <div id="signup_form" className="col-sm-12 mx-auto">
+                <div id="signup_form" className="col-sm-6 col-lg-4 mx-auto">
                 <form />
                     <p id="p_reg"className="h2">Account Registration</p> <br/>
                     <div className="form mb-2 d-flex ">
@@ -37,23 +37,14 @@ const SignUp = () => {
                     <div className="form mb-2">
                         <input type="text" className="form-control"  placeholder="Department" required />
                     </div>
-                    <div className="form mb-2 row">
-                        <div className="form-group">
-                            <div id="myMultiselect" className="multiselect">
-                                <div id="mySelectLabel" className="selectBox" onclick="toggleCheckboxArea()">
-                                    <select className="form-select">
-                                        <option>Select Role</option>
-                                    </select>
-                                    <div className="overSelect"></div>
-                                </div>
-                                <div id="mySelectOptions">
-                                    <label for="one"><input type="checkbox" id="one" onchange="checkboxStatusChange()" value="Requestor" /> Requestor</label>
-                                    <label for="two"><input type="checkbox" id="two" onchange="checkboxStatusChange()" value="Approver" /> Approver</label>
-                                    <label for="three"><input type="checkbox" id="three" onchange="checkboxStatusChange()" value="2nd Approver" /> 2nd Approver</label>
-                                    <label for="four"><input type="checkbox" id="four" onchange="checkboxStatusChange()" value="Implementer" /> Implementor</label>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="form mb-2">
+                        <select className="form-select" >
+                            <option selected disabled>Select Role</option>
+                            <option value="1">Requestor</option>
+                            <option value="2">Approver</option>
+                            <option value="3">Second-Approver</option>
+                            <option value="4">Implementor</option>
+                        </select>
                     </div> <br />                                  
                     <div className="submit_center">
                         <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SUBMIT</button>

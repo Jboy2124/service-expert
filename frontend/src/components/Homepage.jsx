@@ -1,7 +1,6 @@
 import React from 'react';
 import "../css/homepage.css";
 import logo from "../images/sx logo 3.jpg";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 
@@ -10,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 export const Homepage = ({ to }) => {
 
     const navigateToSignUp = useNavigate();
+    const navigateToDashBoard = useNavigate();
 
   return (
     <div>
@@ -29,7 +29,7 @@ export const Homepage = ({ to }) => {
                             <input type="password" className="form-control" id="floatingPassword" placeholder="Password" required/>
                         </div><br/>
                         <div className="submit_center">
-                            <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SIGN IN</button>
+                            <button id="login_submit_button" onClick={() => { navigateToDashBoard(`/SideBar`) }}type="submit" className="btn btn-warning mb-3">SIGN IN</button>
                         </div>
                     </form>
 
