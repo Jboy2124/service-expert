@@ -1,0 +1,45 @@
+*{
+    font-family: "Prompt", sans-serif;
+}
+
+#navBarLogo{
+    height: 60px;
+    width: 150px; 
+}
+#navBarDashLogo{
+    background-color: #435466;
+    color: white;
+}
+
+#sideBarDash{
+    height: 90vh;
+    background-color: #435466;
+    margin: 0;
+}
+
+#sideBarLinks a{
+    margin-left: 20px;
+    color: #f0f4fc;
+}
+
+.noMargin{
+    margin:0
+}
+
+#rightDashboard{
+    background-color: #f0f4fc;
+}
+
+.buttonStyleGlobal{
+    background-color: #ff914a;
+    color: white;
+}
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 591px;
+    }
+}
+
+.card {
+    background-color: transparent;
+}

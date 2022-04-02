@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "../css/homepage.css";
 import logo from "../images/sx logo 3.jpg";
 import { useNavigate } from "react-router-dom";
-import Dashboard from './Dashboard';
+// import Dashboard from './Dashboard';
 import axios from "axios";
 import { toast } from 'react-toastify';
 
@@ -12,14 +12,9 @@ const initialvalue = {
 }
 
 export const Homepage = () => {
-    const [token, setToken] = useState(false);
     const [ authProcess, setAuthProcess ] = useState(initialvalue);
     const { login_username, login_password } = authProcess;
     const navigateToSignUp = useNavigate();
-
-    //  useEffect(() => {
-    //     setToken(false);
-    //     }, [])
 
 
     const handleLoginEvent = (event) => {
@@ -30,7 +25,7 @@ export const Homepage = () => {
             if(response.data.message) {
                 toast.error(response.data.message);
             } else {
-                navigateToSignUp("/Dashboard");
+                navigateToSignUp("/RightDashUser");
             }
         });
     }
@@ -61,7 +56,8 @@ export const Homepage = () => {
                             <input type="password" className="form-control" id="floatingPassword" name='login_password' onChange={handleInputChange} placeholder="Password" required/>
                         </div><br/>
                         <div className="submit_center">
-                            <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SIGN IN</button>
+                            {/* <button id="login_submit_button" onClick={() => { navigateToDashBoard(`/RightDashUser`) }}type="submit" className="btn btn-warning mb-3">SIGN IN</button> */}
+                             <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SIGN IN</button>
                         </div>
                     </form>
 
