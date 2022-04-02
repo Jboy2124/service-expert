@@ -1,9 +1,19 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useState, useEffect } from 'react'
 import Navbar from './Navbar'
 import SideBar from './SideBar'
 import UAMForm from './UAMForm'
 
 const RightDashUser = () => {
+    const [getName, setGetName] = useState("");
+
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/get_name").then((response) => {
+            setGetName(response.data);
+        });
+    }, []);
+
   return (
     <div>
         <Navbar/>
