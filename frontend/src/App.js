@@ -1,19 +1,26 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Homepage } from './components/Homepage'
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignUp from './components/SignUp'
+import Home from "./pages/Home";
+import Dashboard from './components/Dashboard';
 
 
 const App = () => {
   return (
-    // <div>
-    //   <Homepage/>
-    // </div>
-    <Router>
-      <Routes>
-        <Route exact path='/' element={<Homepage />}></Route>
-      </Routes>
-    </Router>
+      <div className="app">
+        <ToastContainer position='top-center' />
+          <Router>
+              <Routes>
+                  <Route exact path="/" element={<Home />} />
+                  <Route exact path="/SignUp" element={<SignUp />} />
+                  <Route exact path='/Dashboard' element={<Dashboard />} />
+              </Routes>
+          </Router>
+      </div>
   )
 }
 
-export default App
+
+export default App;
