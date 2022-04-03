@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import "../css/homepage.css";
-import logo from "../images/sx logo 3.jpg";
+import logo from "../images/sx logo 3a.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import Dashboard from './Dashboard';
+import UserDashBoard from '../pages/UserDashBoard';
 
 
 const initialvalue = {
@@ -28,7 +28,7 @@ export const Homepage = () => {
                 if(response.data.message) {
                     toast.error(response.data.message);
                 } else {
-                    toast.success("Navigate to admin side");
+                    navigateToSignUp("/AdminDashBoard", { state: { name: response.data[0].username, role: "" }});
                 }
             });
         }  else {
@@ -36,14 +36,15 @@ export const Homepage = () => {
                 login_username, login_password
             }).then((response) => {
                 if(response.data.message) {
-                    toast.error(response.data.message);
+                    toast.error(response.data.message); 
                 } else {
-                    // navigateToSignUp("/Dashboard");
-                    navigateToSignUp("/RightDashUser", { state: {profileName: response.data[0].first_name, role: response.data[0].description}});
+                    navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
                 }
             });
         }
     }
+
+    
 
 
     const handleInputChange = (event) => {

@@ -6,7 +6,6 @@ const { application } = require("express");
 const app = express();
 const server_port = 3001;
 
-
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOSTNAME,
     user: process.env.DATABASE_USERNAME,
@@ -20,11 +19,10 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
 
-
 app.post("/api/account_registration", (req,res) => {
     const { firstname, lastname, email, password, confirmPassword, department, role } = req.body;
-    const queryString = "INSERT INTO profile(first_name, last_name, email, department, role) VALUES(?, ?, ?, ?, ?)";
-    db.query(queryString, [firstname, lastname, email, department, role], (err, result) => {
+    const queryString = "INSERT INTO profile(first_name, last_name, email, department, role, status) VALUES(?, ?, ?, ?, ?, ?)";
+    db.query(queryString, [firstname, lastname, email, department, role, "Unconfirmed"], (err, result) => {
         if(err) {
             console.log("Error", err.message);
         } else {
@@ -112,16 +110,16 @@ app.post("/api/auth", (req, res) => {
     });
 });
 
-app.get("/api/get_ticket_type", (req, res) => {
-    const queryString = "SELECT * FROM request_ticket_type";
-    db.query(queryString, (err, result) => {
-        if(err) {
-            console.log("Error: ", err.message);
-        } else {
-            res.send(result);
-        }
-    });
-});
+// app.get("/api/get_ticket_type", (req, res) => {
+//     const queryString = "SELECT * FROM request_ticket_type";
+//     db.query(queryString, (err, result) => {
+//         if(err) {
+//             console.log("Error: ", err.message);
+//         } else {
+//             res.send(result);
+//         }
+//     });
+// });
 
 
 

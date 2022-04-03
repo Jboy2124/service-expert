@@ -93,6 +93,10 @@
   #login_submit_button {
     width: 50%;
   }
+  .signup_main_container {
+    height: auto;
+    
+   }
 
 }
 @media (max-width: 560px) {
@@ -108,10 +112,7 @@
   #login_logo {
     height: 150px;
   }
-  .signup_main_container {
-   height: auto;
-   
-  }
+ 
   
 }
 

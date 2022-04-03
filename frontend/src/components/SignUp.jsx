@@ -67,8 +67,8 @@ const SignUp = () => {
                 <form action='' onSubmit={handleSubmitValue} >
                     <p id="p_reg"className="h2">Account Registration</p> <br/>
                     <div className="form mb-2 d-flex ">
-                        <input type="text" className="form-control " id="floatingInput" name='firstname' onChange={handleInputChange} placeholder="First Name" required /> 
-                        <input type="text" className="form-control mx-1" id="floatingInput" name='lastname' onChange={handleInputChange} placeholder="Last Name" required />
+                        <input type="text" className="form-control " name='firstname' onChange={handleInputChange} placeholder="First Name" required /> 
+                        <input type="text" className="form-control mx-1"  name='lastname' onChange={handleInputChange} placeholder="Last Name" required />
                     </div>
                     <div className="form mb-2 input-group">
                         <span className="input-group-text" id="input-group-right-example">@</span>
@@ -85,7 +85,7 @@ const SignUp = () => {
                     </div>
                     <div className="form mb-2">
                         <select className="form-select" onChange={handleInputChange} name='role'>
-                            <option selected disabled>Select Role</option>
+                            <option defaultValue disabled>Select Role</option>
                                 {
                                     getRole.map((items) => {
                                         return(
