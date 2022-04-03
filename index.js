@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2"); 
 const cors = require("cors");
+const { application } = require("express");
 const app = express();
 const server_port = 3001;
 
@@ -70,23 +71,57 @@ app.get("/api/get_name", (req, res) => {
 });
 
 
-
-app.post("/api/auth", (req, res) => {
+app.post("/api/auth_admin", (req, res) => {
     const { login_username, login_password } = req.body;
-    const queryString = "SELECT * FROM user_access u WHERE u.username=? AND u.password=? ";
+    const queryString = "SELECT * FROM admin WHERE username=? AND password=?";
     db.query(queryString, [ login_username, login_password ], (err, result) => {
         if(err) {
-            console.log("Error", err.message);
+            console.log("Error: ", err.message);
         } else {
             if(result.length > 0) {
                 res.send(result);
             } else {
-                res.send({ message: "Invalid username or password" });
+                res.send({ message: "Invalid Admin Username or Password" });
             }
         }
     });
 });
 
+
+app.post("/api/auth", (req, res) => {
+    const { login_username, login_password } = req.body;
+    const queryString = "SELECT * " +
+                                    "FROM user_access a " + 
+                                    "LEFT JOIN profile p ON a.profile_id = p.approver_id " +
+                                    "LEFT JOIN role r on p.role = r.role_id " +
+                                    "WHERE (a.username = ? AND password = ?) ";
+    db.query(queryString, [ login_username, login_password ], (err, result) => {
+        if(err) {
+            console.log("Error", err.message);
+        } else {
+            if(result.length > 0) {
+                if(result[0].status == "Unconfirmed") {
+                    res.send({ message: "User has no confirmation" });
+                }else {
+                    res.send(result);
+                }
+            } else {
+                    res.send({ message: "Invalid username or password" });
+            }
+        }
+    });
+});
+
+app.get("/api/get_ticket_type", (req, res) => {
+    const queryString = "SELECT * FROM request_ticket_type";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
 
 
 

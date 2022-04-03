@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import "../css/homepage.css";
 import logo from "../images/sx logo 3.jpg";
 import { useNavigate } from "react-router-dom";
-// import Dashboard from './Dashboard';
 import axios from "axios";
 import { toast } from 'react-toastify';
+import Dashboard from './Dashboard';
 
 
 const initialvalue = {
@@ -12,6 +12,7 @@ const initialvalue = {
 }
 
 export const Homepage = () => {
+    const [chkbox, setChkbox] = useState(false);
     const [ authProcess, setAuthProcess ] = useState(initialvalue);
     const { login_username, login_password } = authProcess;
     const navigateToSignUp = useNavigate();
@@ -19,15 +20,29 @@ export const Homepage = () => {
 
     const handleLoginEvent = (event) => {
         event.preventDefault();
-        axios.post("http://localhost:3001/api/auth", {
-            login_username, login_password
-        }).then((response) => {
-            if(response.data.message) {
-                toast.error(response.data.message);
-            } else {
-                navigateToSignUp("/RightDashUser");
-            }
-        });
+
+        if(chkbox) {
+            axios.post("http://localhost:3001/api/auth_admin", {
+                login_username, login_password
+            }).then((response) => {
+                if(response.data.message) {
+                    toast.error(response.data.message);
+                } else {
+                    toast.success("Navigate to admin side");
+                }
+            });
+        }  else {
+            axios.post("http://localhost:3001/api/auth", {
+                login_username, login_password
+            }).then((response) => {
+                if(response.data.message) {
+                    toast.error(response.data.message);
+                } else {
+                    // navigateToSignUp("/Dashboard");
+                    navigateToSignUp("/RightDashUser", { state: {profileName: response.data[0].first_name, role: response.data[0].description}});
+                }
+            });
+        }
     }
 
 
@@ -36,6 +51,15 @@ export const Homepage = () => {
         const {name, value} = event.target;
         setAuthProcess({...authProcess, [name] : value});
     }
+
+    const handleSelectedChk = (e) => {
+        if(e.target.checked) {
+            setChkbox(true);
+        } else {
+            setChkbox(false)
+        }
+    }
+
 
 
   return (
@@ -54,9 +78,15 @@ export const Homepage = () => {
                         </div>
                         <div className="form mb-3">
                             <input type="password" className="form-control" id="floatingPassword" name='login_password' onChange={handleInputChange} placeholder="Password" required/>
+                        </div>
+                        <div id='service-expert-admin-checkbox' className="form-check">
+                            <input className="form-check-input" type="checkbox" name='admin_chkbox'  onChange={handleSelectedChk} value="" id="flexCheckDefault"></input>
+                            <label id='form-check-label-admin' className="form-check-label" for="flexCheckDefault">
+                                Service Expert Admin
+                            </label>
                         </div><br/>
+
                         <div className="submit_center">
-                            {/* <button id="login_submit_button" onClick={() => { navigateToDashBoard(`/RightDashUser`) }}type="submit" className="btn btn-warning mb-3">SIGN IN</button> */}
                              <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SIGN IN</button>
                         </div>
                     </form>

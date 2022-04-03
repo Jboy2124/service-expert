@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import RightDashUser from './components/RightDashUser';
 import ActiveTicketDashUser from './components/ActiveTicketDashUser';
 import TicketHistoryDashUser from './components/TicketHistoryDashUser';
+import Dashboard from './components/Dashboard';
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
           <Router>
               <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path='/Dashboard' element={<Dashboard />} />
                   <Route path="/SignUp" element={<SignUp />} />
                    <Route path="/RightDashUser" element={<RightDashUser />} />
                   <Route path="/ActiveTicketDashUser" element={<ActiveTicketDashUser />} />

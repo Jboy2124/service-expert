@@ -1,8 +1,15 @@
 import React from 'react'
+import Navbar from './Navbar'
+import RightDashUser from './RightDashUser'
+import SideBar from './SideBar'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div>
+      <Navbar />
+      <RightDashUser />
+      <SideBar />
+    </div>
   )
 }
 

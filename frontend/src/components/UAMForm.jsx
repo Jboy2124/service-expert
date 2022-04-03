@@ -1,9 +1,15 @@
 import React from 'react'
+import axios from 'axios';
 
 const UAMForm = () => {
   const time = new Date().toLocaleTimeString();
   const date = new Date().toLocaleDateString();
   const dateTime = (`${date} ${time}`)
+
+
+
+
+
   return (
     <div >  
             <div class="modal fade" id="staticBackdropUAM" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -112,6 +118,9 @@ const UAMForm = () => {
                     </div>
                 </div>
             </div>
+
+
+
             <div class="modal fade" id="staticBackdropSR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
