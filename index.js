@@ -5,7 +5,6 @@ const cors = require("cors");
 const app = express();
 const server_port = 3001;
 
-
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOSTNAME,
     user: process.env.DATABASE_USERNAME,
@@ -18,7 +17,6 @@ const db = mysql.createConnection({
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
-
 
 app.post("/api/account_registration", (req,res) => {
     const { firstname, lastname, email, password, confirmPassword, department, role } = req.body;
@@ -86,9 +84,6 @@ app.post("/api/auth", (req, res) => {
         }
     });
 });
-
-
-
 
 
 app.listen(server_port, (req, res) => {

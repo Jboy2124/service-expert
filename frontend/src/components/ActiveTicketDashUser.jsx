@@ -1,17 +1,11 @@
 import React from 'react'
-import Navbar from './Navbar'
-import SideBar from './SideBar'
+import ActiveTicketModal from '../modals/ActiveTicketModal'
 
 const ActiveTicketDashUser = () => {
   return (
-    <div>
-        <Navbar/>
-        <div className="row noMargin">
-            <div id="sideBarDash" className="col-lg-2 col-sm-3">
-                <SideBar/>
-            </div>
-            <div id="rightDashboard" className="col-lg-10 col-sm-9">
-                <div class="navbar mt-5 mb-3">
+    <div >
+        <div id="rightDashboard" className="col-lg-12">
+                <div class="navbar mt-3 mb-3">
                       <div class="container-fluid">
                           <span class="navbar-brand">Active Tickets</span>
                           <form class="d-flex">
@@ -24,17 +18,17 @@ const ActiveTicketDashUser = () => {
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">USer Access Management</a>
+                            <a class="nav-link active" id="UAM-tab" data-bs-toggle="tab" href="#UAM" role="tab" aria-controls="UAM" aria-selected="true">User Access Management</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Service Request</a>
+                            <a class="nav-link" id="SR-tab" data-bs-toggle="tab" href="#SR" role="tab" aria-controls="SR" aria-selected="false">Service Request</a>
                         </li>
                         
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="tab-pane fade show active" id="UAM" role="tabpanel" aria-labelledby="UAM-tab">
                                 <div class="row ">
                                     <div class="col-sm-12">
                                         <table class="table table-striped">
@@ -48,20 +42,8 @@ const ActiveTicketDashUser = () => {
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <th scope="row">TN-001</th>
+                                                <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeUAMTicketModal">TN-001</a></th>
                                                 <td>03/22/2022 08:00:00</td>
-                                                <td>UAM - New User Account Creation</td>
-                                                <td>For review and approval</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">TN-002</th>
-                                                <td>03/22/2022 08:00:00</td>
-                                                <td>UAM - New User Account Creation</td>
-                                                <td>For review and approval</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">TN-003</th>
-                                                <td >03/22/2022 08:00:00</td>
                                                 <td>UAM - New User Account Creation</td>
                                                 <td>For review and approval</td>
                                             </tr>
@@ -70,7 +52,7 @@ const ActiveTicketDashUser = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="tab-pane fade" id="SR" role="tabpanel" aria-labelledby="SR-tab">
                                 <div class="row  ">
                                     <div class="col-sm-12">
                                         <table class="table table-striped">
@@ -84,20 +66,8 @@ const ActiveTicketDashUser = () => {
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <th scope="row">TN-001</th>
+                                                <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeSRTicketModal">TN-001</a></th>
                                                 <td>03/22/2022 08:00:00</td>
-                                                <td>SR - New User Account Creation</td>
-                                                <td>For review and approval</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">TN-002</th>
-                                                <td>03/22/2022 08:00:00</td>
-                                                <td>SR - New User Account Creation</td>
-                                                <td>For review and approval</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">TN-003</th>
-                                                <td >03/22/2022 08:00:00</td>
                                                 <td>SR - New User Account Creation</td>
                                                 <td>For review and approval</td>
                                             </tr>
@@ -110,8 +80,9 @@ const ActiveTicketDashUser = () => {
                             </div>
                     </div>
                 </div>
-            </div>
+        
         </div> 
+        <ActiveTicketModal/>
     </div>
   )
 }

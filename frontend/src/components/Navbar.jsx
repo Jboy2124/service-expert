@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from "../images/dashlogo.jpg"
+import logo from "../images/dashboard logo.jpg"
 import "../css/navbar.css"
 import { useNavigate } from 'react-router-dom'
 
@@ -12,23 +12,26 @@ const Navbar = () => {
 
   return (
     <div>
-       <div className="row noMargin">
-               <div id="navBarDashLogo" className="col-4">
-                   <img className="" id=""src={logo} alt="" /> 
-               </div>
-               <div id="navBarDashLogo" className="col-8 d-flex justify-content-end px-5">
-                    <ul class="list-inline pt-3">
-                        <li class="list-inline-item px-3">{time}</li>
-                        <li class="list-inline-item">{date}</li>
-                        <li class="list-inline-item px-3"><i class="bi bi-bell"></i></li>
-                        <li class="list-inline-item px-2"><i class="bi bi-person-circle"></i> {fullName}</li>
-                        <li class="list-inline-item px-3">{role}</li>
-                        <li class="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {
-                        navigateHomepage("/")
-                    }}>LOGOUT</a></li>
-                    </ul>                  
-               </div>
-       </div>
+       <nav id="navBarDashLogo" class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                   Service Expert
+                </a>
+                <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon "></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav justify-content-end flex-grow-1">
+                          <li class="list-inline-item">{time}</li>
+                          <li class="list-inline-item">{date}</li>
+                          <li class="list-inline-item"><i class="bi bi-bell"></i></li>
+                          <li class="list-inline-item"><i class="bi bi-person-circle"></i> {fullName}</li>
+                          <li class="list-inline-item">{role}</li>
+                          <li class="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {navigateHomepage("/")}}>LOGOUT</a></li>
+                      </ul>   
+                </div>
+            </div>
+       </nav>
     </div>
   )
 }

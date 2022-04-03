@@ -1,12 +1,12 @@
 import React from 'react'
 import { ToastContainer } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from './components/SignUp'
 import Home from "./pages/Home";
-import RightDashUser from './components/RightDashUser';
-import ActiveTicketDashUser from './components/ActiveTicketDashUser';
-import TicketHistoryDashUser from './components/TicketHistoryDashUser';
+import AdminDashBoard from './pages/AdminDashBoard';
+import UserDashBoard from './pages/UserDashBoard';
+
 
 
 const App = () => {
@@ -17,9 +17,8 @@ const App = () => {
               <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/SignUp" element={<SignUp />} />
-                   <Route path="/RightDashUser" element={<RightDashUser />} />
-                  <Route path="/ActiveTicketDashUser" element={<ActiveTicketDashUser />} />
-                  <Route path="/TicketHistoryDashUser" element={<TicketHistoryDashUser />} />
+                  <Route path="/AdminDashBoard" element={<AdminDashBoard />} />
+                  <Route path="/UserDashBoard" element={<UserDashBoard />} />
               </Routes>
           </Router>
       </div>
