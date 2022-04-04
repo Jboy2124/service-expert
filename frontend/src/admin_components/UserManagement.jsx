@@ -86,7 +86,7 @@ const UserManagement = () => {
                                                        <td>{items.role}</td>
                                                        <td>
                                                             <a href="#" className="" onClick={() => getSelectedID(items.approver_id)}>Approve</a> <br/>
-                                                            <a href="">Delete</a> 
+                                                            <a href="#">Delete</a> 
                                                      </td>
                                                     </tr>
                                                 )

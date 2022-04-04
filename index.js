@@ -179,6 +179,30 @@ app.get("/api/get_confirmed", (req, res) => {
 });
 
 
+app.get("/api/admin_totaluser", (req, res) => {
+    const queryString = "SELECT COUNT(IFNULL(p.approver_id,0)) as totalUser FROM profile p";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+app.get("/api/admin_totalrole", (req, res) => {
+    const queryString = "SELECT COUNT(IFNULL(r.role_id,0)) as roleCount FROM role r";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);
     db.connect((err) => {

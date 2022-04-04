@@ -1,7 +1,23 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 
 
 const AdminOverview = () => {
+    const [countUser, setCountUser] = useState([{}]);
+    const[countRole, setCountRole] = useState([{}]);
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/admin_totaluser").then((response) => {
+            setCountUser(response.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/admin_totalrole").then((response) => {
+            setCountRole(response.data);
+        });
+    });
+
   return (
     <div >
         <div id="rightDashboard" className="col-lg-12 col-sm-8 ">
@@ -15,7 +31,11 @@ const AdminOverview = () => {
                 <div class="card text-white bg-danger mb-3" >
                     <div class="card-header">  <i class="bi bi-people-fill"></i> </div>
                         <div class="card-body bg-light">
-                            <h1 class="card-title text-center  text-danger">25</h1>
+                            <h1 class="card-title text-center  text-danger">{
+                                countUser.map((items) => {
+                                    return items.totalUser;
+                                })
+                            }</h1>
                             <p class="card-text text-center  text-danger"> Total Users</p>
                         </div>
                     </div>
@@ -24,7 +44,11 @@ const AdminOverview = () => {
                 <div class="card text-white bg-secondary mb-3" >
                     <div class="card-header"> <i class="bi bi-gear-fill"></i> </div>
                         <div class="card-body bg-light">
-                            <h1 class="card-title text-center text-secondary">4</h1>
+                            <h1 class="card-title text-center text-secondary">{
+                                countRole.map((item) => {
+                                    return item.roleCount;
+                                })
+                            }</h1>
                             <p class="card-text text-center  text-secondary">Roles</p>
                         </div>
                     </div>
