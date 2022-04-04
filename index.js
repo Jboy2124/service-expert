@@ -138,6 +138,30 @@ app.get("/api/get_unconfirmed", (req, res) => {
     });
 });
 
+app.put("/api/confirm_profile", (req, res) => {
+    const id = req.body.id;
+    const queryString = "UPDATE profile SET status = ? WHERE approver_id = ?";
+    db.query(queryString, ["Confirmed", id], (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            const queryString = "SELECT p.approver_id,  p.date_created, p.email, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as fullname, "+
+                                            "p.department, r.description as role "+ 
+                                            "FROM profile p "+
+                                            "LEFT JOIN role r on p.role = r.role_id "+
+                                            "WHERE p.status = ?";
+            db.query(queryString, "Unconfirmed", (err, result) => {
+                if(err) {
+                    console.log("Error: ", err.message);
+                } else {
+                    res.send(result);
+                }
+            });
+        }
+    });
+});
+
+
 
 app.get("/api/get_confirmed", (req, res) => {
     const queryString = "SELECT p.approver_id, p.date_created, p.email, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as fullname, "+

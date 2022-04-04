@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import  { toast } from 'react-toastify';
 import axios from 'axios'
+
+
 
 
 const UserManagement = () => {
     const [getList, setGetList] = useState([{}]);
     const [getConfirmed, setGetConfirmed] = useState([{}]);
+    // const [approvedProfile, setApprovedProfile] = useState(0);
 
 
     useEffect(() => {
@@ -18,8 +22,19 @@ const UserManagement = () => {
         axios.get("http://localhost:3001/api/get_confirmed").then((response) => {
             setGetConfirmed(response.data);
         });
-    }, []);
+    }, [getList]);
 
+
+    const getSelectedID = (id) => {
+        axios.put("http://localhost:3001/api/confirm_profile", { id }).then((response) => {
+            setTimeout(() => {
+                setGetList(response.data);
+            }, 500);
+            toast.success("Profile has been Approved");
+        });
+    }
+ 
+        
 
   return (
     <div>
@@ -63,14 +78,14 @@ const UserManagement = () => {
                                         {
                                             getList.map((items) => {
                                                 return(
-                                                    <tr>
-                                                       <td>{items.approver_id}</td> 
+                                                    <tr key={items.approver_id}>
+                                                       <td>{items.date_created}</td> 
                                                        <td>{items.email}</td> 
                                                        <td>{items.fullname}</td>
                                                        <td>{items.department}</td> 
                                                        <td>{items.role}</td>
                                                        <td>
-                                                            <a href="">Approve</a> <br/>
+                                                            <a href="#" className="" onClick={() => getSelectedID(items.approver_id)}>Approve</a> <br/>
                                                             <a href="">Delete</a> 
                                                      </td>
                                                     </tr>
