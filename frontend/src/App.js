@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Dashboard from './components/Dashboard';
 import AdminDashBoard from './pages/AdminDashBoard';
 import UserDashBoard from './pages/UserDashBoard';
+import ApproverDashBoard from './pages/ApproverDashBoard';
 
 
 
@@ -21,6 +22,7 @@ const App = () => {
                   <Route exact path="/SignUp" element={<SignUp />} />
                   <Route exact path="/AdminDashBoard" element={<AdminDashBoard />} />
                   <Route exact path="/UserDashBoard" element={<UserDashBoard />} />
+                  <Route exact path="/ApproverDashBoard" element={<ApproverDashBoard />} />
               </Routes>
           </Router>
       </div>
