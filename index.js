@@ -223,6 +223,28 @@ app.post("/api/add_role", (req,res) => {
     })
 });
 
+//Delete Role in the db
+
+app.put("/api/deleteRole", (req, res) => {
+    const id = req.body.id;
+    const queryString = "DELETE FROM role WHERE role_id = ?";
+    db.query(queryString, id, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            const sql = "SELECT * FROM role";
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err)
+                }
+                else{
+                    res.send(result)
+                }
+            })
+        }
+    });
+});
+
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);
     db.connect((err) => {
