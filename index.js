@@ -146,10 +146,10 @@ app.put("/api/confirm_profile", (req, res) => {
             console.log("Error: ", err.message);
         } else {
             const queryString = "SELECT p.approver_id,  p.date_created, p.email, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as fullname, "+
-                                            "p.department, r.description as role "+ 
-                                            "FROM profile p "+
-                                            "LEFT JOIN role r on p.role = r.role_id "+
-                                            "WHERE p.status = ?";
+                                "p.department, r.description as role "+ 
+                                "FROM profile p "+
+                                "LEFT JOIN role r on p.role = r.role_id "+
+                                "WHERE p.status = ?";
             db.query(queryString, "Unconfirmed", (err, result) => {
                 if(err) {
                     console.log("Error: ", err.message);
@@ -260,7 +260,37 @@ app.get("/api/user_profile/:id", (req, res) => {
 });
 
 
-app.get("/api/ticketno")
+app.get("/api/ticketno", (req, res) => {
+    const queryString = "SELECT * FROM type_uam_ticket";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+//Adding new role in the database 
+app.post("/api/add_role", (req,res) => {
+    const { role, rights } = req.body;
+    db.query("INSERT INTO role (description, rights) VALUES (?,?)", [role, rights], (err,result) => {
+        if (err) {
+            console.log(err)
+        }else {
+            const sql = "SELECT * FROM role";
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err)
+                }
+                else{
+                    res.send(result)
+                }
+            })
+        }
+    })
+});
 
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);
