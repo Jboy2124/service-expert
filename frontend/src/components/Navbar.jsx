@@ -16,7 +16,7 @@ const Navbar = (props) => {
   const user_name = props.name[0];
   const user_role = (props.name[1]) ? ` - (${props.name[1]})` : "";
 
-
+  
   return (
     <div>
        <nav id="navBarDashLogo" class="navbar navbar-expand-lg navbar-dark">

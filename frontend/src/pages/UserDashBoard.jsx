@@ -20,7 +20,7 @@ const UserDashBoard = () => {
   return (
     <div>
         
-        <Navbar name={getName}  />
+        <Navbar name={getName} />
         {/* <Navbar /> */}
         <div className="row noMargin">
             <div id="sideBarDash" className="col-lg-2 col-sm-3">

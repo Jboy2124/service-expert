@@ -179,6 +179,10 @@ app.get("/api/get_confirmed", (req, res) => {
 });
 
 
+
+
+
+
 app.get("/api/admin_totaluser", (req, res) => {
     const queryString = "SELECT COUNT(IFNULL(p.approver_id,0)) as totalUser FROM profile p";
     db.query(queryString, (err, result) => {
@@ -202,6 +206,61 @@ app.get("/api/admin_totalrole", (req, res) => {
     });
 });
 
+
+app.get("/api/category", (req, res) => {
+    const queryString = "SELECT * FROM type_uam_category";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+
+app.get("/api/getsystem", (req,res) => {
+    const queryString = "SELECT * FROM ticket_system";
+    db.query(queryString, (err,result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+app.get("/api/getoperation", (req,res) => {
+    const queryString = "SELECT * FROM type_uam_operation";
+    db.query(queryString, (err,result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+app.get("/api/user_profile/:id", (req, res) => {
+    const profile_id = parseInt(req.params.id);
+    const queryString = "SELECT CONCAT(p.first_name,' ',p.last_name) as fullname, " +
+                                    "p.email, p.department " +
+                                    "FROM profile p " +
+                                    "WHERE p.approver_id = ? ";
+    db.query(queryString, profile_id, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+app.get("/api/ticketno")
 
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);

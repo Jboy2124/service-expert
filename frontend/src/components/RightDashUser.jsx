@@ -1,6 +1,9 @@
 
 import React from 'react'
 import UAMForm from '../modals/UAMForm'
+import Navbar from './Navbar'
+
+
 
 
 const RightDashUser = () => {

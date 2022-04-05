@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 
 const UAMForm = () => {
-  const time = new Date().toLocaleTimeString();
-  const date = new Date().toLocaleDateString();
-  const dateTime = (`${date} ${time}`)
+    const [getCategory, setGetCategory] = useState([{}]);
 
 
+    const time = new Date().toLocaleTimeString();
+    const date = new Date().toLocaleDateString();
+    const dateTime = (`${date} ${time}`)
+
+    // useEffect(() => {
+    //     axios.get("http://localhost:3001/api/category").then((response) => {
+    //         setGetCategory(response.data);
+    //     });
+    // },[]);
+
+    // console.log(getCategory);
 
 
 
@@ -61,6 +70,13 @@ const UAMForm = () => {
                                             <option value="">Reset Password</option>
                                             <option value="">Force Logout</option>
                                             <option value="">Unlock Account</option>
+                                            {/* {
+                                                getCategory.map((items) => {
+                                                    return(
+                                                        <option value={items.category_id}>{items.category_name}</option>
+                                                    )
+                                                })
+                                            } */}
                                         </select>
                                     </div>
                                 </div>

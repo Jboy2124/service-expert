@@ -1,11 +1,42 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 
 const UAMForm = () => {
-  const time = new Date().toLocaleTimeString();
-  const date = new Date().toLocaleDateString();
-  const dateTime = (`${date} ${time}`)
+    const [token, setToken] = useState([{}]);
+    const [getCategory, setGetCategory] = useState([{}]);
+    const [getSystem, setGetSystem] = useState([{}]);
+    const [getOperation, setGetOperation] = useState([{}]);
+    const time = new Date().toLocaleTimeString();
+    const date = new Date().toLocaleDateString();
+    const dateTime = (`${date} ${time}`)
 
+    useEffect(() => {
+        const id = parseInt(sessionStorage.getItem("sessionid"));
+        axios.get(`http://localhost:3001/api/user_profile/${id}`,).then((response) => {
+            setToken(response.data);
+        });
+    },[]);
+    
+
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/category").then((response) => {
+            setGetCategory(response.data);
+        });
+    },[]);
+
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/getsystem").then((response) => {
+            setGetSystem(response.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/getoperation").then((response) => {
+            setGetOperation(response.data);
+        });
+    }, []);
 
 
 
@@ -36,31 +67,33 @@ const UAMForm = () => {
                                 <div class="row mb-1">
                                     <label for="" class="col-sm-3 form-label">Requestor: </label>
                                     <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
+                                      <input type="text" class="form-control" id=""  value={token.map(i => i.fullname)} disabled/>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
                                     <label for="" class="col-sm-3 form-label">Email: </label>
                                     <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
+                                      <input type="text" class="form-control" id="" value={token.map(i => i.email)} disabled/>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
                                     <label for="" class="col-sm-3 form-label">Department:</label>
                                     <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
+                                      <input type="text" class="form-control" id="" value={token.map(i => i.department)} disabled/>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
                                     <label for="" class="col-sm-3 form-label">UAM Category:</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" aria-label="Default select">
-                                            <option selected="">Select category</option>
-                                            <option value="">New User Account Creation</option>
-                                            <option value="">Modify User Priveledge</option>
-                                            <option value="">Reset Password</option>
-                                            <option value="">Force Logout</option>
-                                            <option value="">Unlock Account</option>
+                                            <option selected disabled>Select category</option>
+                                            {
+                                                getCategory.map((items) => {
+                                                    return(
+                                                        <option value={items.category_id}>{items.category_name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -68,15 +101,14 @@ const UAMForm = () => {
                                     <label for="" class="col-sm-3 form-label">System:</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" aria-label="Default select">
-                                            <option value="" selected disabled>Select system</option>
-                                            <option value="">HP</option>
-                                            <option value="">Huawei</option>
-                                            <option value="">Nokia</option>
-                                            <option value="">Asus</option>
-                                            <option value="">Dell</option>
-                                            <option value="">Ubuntu</option>
-                                            <option value="">Red Hat</option>
-                                            <option value="">Centos</option>
+                                            <option selected disabled>Select system</option>
+                                            {
+                                                getSystem.map((items) => {
+                                                    return(
+                                                        <option value={items.system_id} >{items.system_name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -84,10 +116,14 @@ const UAMForm = () => {
                                     <label for="" class="col-sm-3 form-label">Operation Rights:</label>
                                     <div class="col-sm-9">
                                         <select class="form-select" aria-label="Default select">
-                                            <option value="" selected disabled>Select rights</option>
-                                            <option value="">Read / View Access</option>
-                                            <option value="">Operator</option>
-                                            <option value="">Maintenance</option>
+                                            <option selected disabled>Select rights</option>
+                                            {
+                                                getOperation.map((items) => {
+                                                    return (
+                                                        <option value={items.operation_id}>{items.operation_name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
