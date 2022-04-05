@@ -30,14 +30,13 @@ const AddRoleForm = () => {
         toast.success("New Role has been added", {
             autoClose: 1000
         })
-    
     }
-    
     const addNewRoleValueChange = (event) => {
         event.preventDefault();
         const {name, value} = event.target;
         setAddRole({...addRole, [name] : value});
     }
+   
 
   return (
     <div >  

@@ -15,7 +15,7 @@ const UserManagement = () => {
             setGetRole(response.data);
             ;
         });
-    },[]);
+    },[getRole]);
 
     useEffect(() => {
         axios.get("http://localhost:3001/api/get_unconfirmed").then((response) => {
@@ -40,7 +40,18 @@ const UserManagement = () => {
                 autoClose: 1000
             });
         });
-    }
+    };
+
+    const deleteRole = (id) => {
+        axios.put("http://localhost:3001/api/deleteRole", { id }).then((response) => {
+            setTimeout(() => {
+                setGetRole(response.data);
+            }, 500);
+            toast.success("Role has been deleted", {
+                autoClose: 1000
+            });
+        });
+    };
  
         
 
@@ -184,12 +195,13 @@ const UserManagement = () => {
                                     </thead>
                                     <tbody>
                                         {
+    
                                         getRole.map((items) => {
                                             return(
-                                                <tr>
+                                                <tr key={items.role_id}>
                                                     <td> {items.description}</td>
                                                     <td> {items.rights}</td>
-                                                    <td>  <a href="">Delete</a> </td>
+                                                    <a href="#" className="" onClick={() => deleteRole(items.role_id)}>Delete</a> 
                                                 </tr>
                                             )
                                         })
