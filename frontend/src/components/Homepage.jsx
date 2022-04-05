@@ -42,7 +42,7 @@ export const Homepage = () => {
                         autoClose: 200
                     }); 
                 } else {
-                    navigateToSignUp("/ApproverDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
                 }
             });
         }
