@@ -203,6 +203,26 @@ app.get("/api/admin_totalrole", (req, res) => {
 });
 
 
+//Adding new role in the database 
+app.post("/api/add_role", (req,res) => {
+    const { role, rights } = req.body;
+    db.query("INSERT INTO role (description, rights) VALUES (?,?)", [role, rights], (err,result) => {
+        if (err) {
+            console.log(err)
+        }else {
+            const sql = "SELECT * FROM role";
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err)
+                }
+                else{
+                    res.send(result)
+                }
+            })
+        }
+    })
+});
+
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);
     db.connect((err) => {

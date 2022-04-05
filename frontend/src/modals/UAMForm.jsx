@@ -2,15 +2,8 @@ import React from 'react'
 import axios from 'axios';
 
 const UAMForm = () => {
-  const time = new Date().toLocaleTimeString();
-  const date = new Date().toLocaleDateString();
-  const dateTime = (`${date} ${time}`)
 
-
-
-
-
-  return (
+    return (
     <div >  
             <div class="modal fade" id="staticBackdropUAM" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -26,12 +19,6 @@ const UAMForm = () => {
                                   <div class="col-sm-9">
                                     <input type="text" class="form-control" id=""disabled/>
                                   </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Date and Time: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" value={dateTime} disabled/>
-                                    </div>
                                 </div>
                                 <div class="row mb-1">
                                     <label for="" class="col-sm-3 form-label">Requestor: </label>
@@ -135,12 +122,6 @@ const UAMForm = () => {
                               <div class="col-sm-9">
                                 <input type="text" class="form-control" id=""disabled />
                               </div>
-                            </div>
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Date and Time: </label>
-                                <div class="col-sm-9">
-                                  <input type="text" class="form-control" id="" value={dateTime} disabled />
-                                </div>
                             </div>
                             <div class="row mb-1">
                                 <label for="" class="col-sm-3 form-label">Requestor: </label>

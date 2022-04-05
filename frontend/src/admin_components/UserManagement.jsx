@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import  { toast } from 'react-toastify';
 import axios from 'axios'
-
-
+import AddRoleForm from "../modals/AddRoleForm"
 
 
 const UserManagement = () => {
     const [getList, setGetList] = useState([{}]);
     const [getConfirmed, setGetConfirmed] = useState([{}]);
+    const [getRole, setGetRole] = useState([{}]);
     // const [approvedProfile, setApprovedProfile] = useState(0);
 
+    useEffect(() => {
+        axios.get("http://localhost:3001/api/get_role").then((response) => {
+            setGetRole(response.data);
+            ;
+        });
+    },[]);
 
     useEffect(() => {
         axios.get("http://localhost:3001/api/get_unconfirmed").then((response) => {
@@ -30,7 +36,9 @@ const UserManagement = () => {
             setTimeout(() => {
                 setGetList(response.data);
             }, 500);
-            toast.success("Profile has been Approved");
+            toast.success("Profile has been Approved", {
+                autoClose: 1000
+            });
         });
     }
  
@@ -175,41 +183,27 @@ const UserManagement = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>              
-                                            <td>Requestor</td>
-                                            <td>*File a request <br/>
-                                                *Perform validation 
-                                            </td>
-                                            <td> <a href="">Delete</a> </td>
-                                        </tr>
-                                        <tr>              
-                                            <td>Approver</td>
-                                            <td>​Review and approves request </td>
-                                            <td> <a href="">Delete</a> </td>
-                                        </tr>
-                                        <tr>              
-                                            <td>Second Approver</td>
-                                            <td>Review and approves request (if there is system downtime)</td>
-                                            <td> <a href="">Delete</a> </td>
-                                        </tr>
-                                        <tr>              
-                                            <td>Implementor</td>
-                                            <td>*Implements their assign task <br/>
-                                                *Specifies implementation status<br/>
-                                                *Attach logs<br/>
-                                            </td>
-                                            <td> <a href="">Delete</a> </td>
-                                        </tr>
-                                    
+                                        {
+                                        getRole.map((items) => {
+                                            return(
+                                                <tr>
+                                                    <td> {items.description}</td>
+                                                    <td> {items.rights}</td>
+                                                    <td>  <a href="">Delete</a> </td>
+                                                </tr>
+                                            )
+                                        })
+                                        }
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                     </div>
-                </div>
+            </div>
         </div>
         </div>
+        <AddRoleForm/>
     </div>
   )
 }

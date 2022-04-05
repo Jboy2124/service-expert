@@ -4,7 +4,7 @@ import logo from "../images/sx logo 3a.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import UserDashBoard from '../pages/UserDashBoard';
+
 
 
 const initialvalue = {
@@ -26,7 +26,9 @@ export const Homepage = () => {
                 login_username, login_password
             }).then((response) => {
                 if(response.data.message) {
-                    toast.error(response.data.message);
+                    toast.error(response.data.message, {
+                        autoClose : 200
+                    });
                 } else {
                     navigateToSignUp("/AdminDashBoard", { state: { name: response.data[0].username, role: "" }});
                 }
@@ -36,9 +38,11 @@ export const Homepage = () => {
                 login_username, login_password
             }).then((response) => {
                 if(response.data.message) {
-                    toast.error(response.data.message); 
+                    toast.error(response.data.message, {
+                        autoClose: 200
+                    }); 
                 } else {
-                    navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    navigateToSignUp("/ApproverDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
                 }
             });
         }
@@ -80,13 +84,14 @@ export const Homepage = () => {
                         <div className="form mb-3">
                             <input type="password" className="form-control" id="floatingPassword" name='login_password' onChange={handleInputChange} placeholder="Password" required/>
                         </div>
-                        <div id='service-expert-admin-checkbox' className="form-check">
-                            <input className="form-check-input" type="checkbox" name='admin_chkbox'  onChange={handleSelectedChk} value="" id="flexCheckDefault"></input>
-                            <label id='form-check-label-admin' className="form-check-label" for="flexCheckDefault">
-                                Service Expert Admin
-                            </label>
-                        </div><br/>
-
+                        <div className="col-lg-12 d-flex justify-content-center mb-3 ">
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" name='admin_chkbox'  onChange={handleSelectedChk} value="" id="flexCheckDefault"></input>
+                                <label id='form-check-label-admin' className="form-check-label" for="flexCheckDefault">
+                                    Service Expert Admin
+                                </label>
+                            </div><br/>
+                        </div>
                         <div className="submit_center">
                              <button id="login_submit_button" type="submit" className="btn btn-warning mb-3">SIGN IN</button>
                         </div>

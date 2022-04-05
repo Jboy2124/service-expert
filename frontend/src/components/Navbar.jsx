@@ -34,7 +34,7 @@ const Navbar = (props) => {
                           <li class="list-inline-item"><i class="bi bi-bell"></i></li>
                           {/* <li class="list-inline-item"><i class="bi bi-person-circle"></i> Jufel</li> */}
                           <li class="list-inline-item"><i class="bi bi-person-circle"></i> {user_name} {user_role}</li>
-                          <li class="list-inline-item">{roles}</li>
+                          {/* <li class="list-inline-item">{roles}</li> */}
                           <li class="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {navigateHomepage("/")}}>LOGOUT</a></li>
                       </ul>   
                 </div>
