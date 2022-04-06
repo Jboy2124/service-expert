@@ -314,6 +314,29 @@ app.put("/api/deleteRole", (req, res) => {
     });
 });
 
+//Download ticket list
+
+app.get("/api/download", (req, res) => {
+    const queryString = "SELECT type_uam_ticket.ticket_id, date_format(type_uam_ticket.date_created, '%Y-%c-%d %H:%i:%s') as date_requested, " +
+    "CONCAT(profile.first_name,' ',profile.last_name) as fullname," +
+    "profile.email, " +
+    "profile.department, " +
+    "type_uam_category.category_name as request_category, " +
+    "type_uam_operation.operation_name as operation_rights, " +
+    "ticket_system.system_name as system_name " +
+    "FROM type_uam_ticket " +
+    "LEFT JOIN profile on requested_by = approver_id " +
+    "LEFT JOIN ticket_system on type_uam_ticket.system = ticket_system.system_id " +
+    "LEFT JOIN type_uam_category on type_uam_ticket.category = type_uam_category.category_id " +
+    "LEFT JOIN type_uam_operation on type_uam_ticket.operation = type_uam_operation.operation_id ";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);
     db.connect((err) => {

@@ -20,7 +20,7 @@ const AdminOverview = () => {
 
   return (
     <div >
-        <div id="rightDashboard" className="col-lg-12 col-sm-8 ">
+        <div id="rightDashboard" className="overflow col-lg-12 col-sm-12  ">
             <div className="navbar mt-3 mb-3">
                     <div className="container-fluid ">
                         <span className="navbar-brand">Overview</span>
@@ -28,9 +28,9 @@ const AdminOverview = () => {
             </div>
             <div className="row m-3 ">
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-danger mb-3" >
-                    <div class="card-header">  <i class="bi bi-people-fill"></i> </div>
-                        <div class="card-body bg-light">
+                <div class="card text-white mb-3 border-radius" >
+                    <div class="card-header bg-danger">  <i class="bi bi-people-fill"></i> </div>
+                        <div class="card-body bg-light border-radius-body">
                             <h1 class="card-title text-center  text-danger">{
                                 countUser.map((items) => {
                                     return items.totalUser;
@@ -41,9 +41,9 @@ const AdminOverview = () => {
                     </div>
                 </div>
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-secondary mb-3" >
-                    <div class="card-header"> <i class="bi bi-gear-fill"></i> </div>
-                        <div class="card-body bg-light">
+                <div class="card text-white mb-3 border-radius" >
+                    <div class="card-header bg-secondary"> <i class="bi bi-gear-fill"></i> </div>
+                        <div class="card-body bg-light border-radius-body">
                             <h1 class="card-title text-center text-secondary">{
                                 countRole.map((item) => {
                                     return item.roleCount;
@@ -56,27 +56,27 @@ const AdminOverview = () => {
             </div>
             <div className="row m-3 ">
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-danger mb-3" >
-                    <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                        <div class="card-body bg-light">
+                <div class="card text-white mb-3 border-radius" >
+                    <div class="card-header bg-danger"> <i class="bi bi-ticket"></i></div>
+                        <div class="card-body bg-light border-radius-body">
                             <h1 class="card-title text-center  text-danger">5</h1>
                             <p class="card-text text-center  text-danger">Active Tickets</p>
                         </div>
                     </div>
                 </div>
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-secondary mb-3" >
-                    <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                        <div class="card-body bg-light">
+                <div class="card text-white  mb-3 border-radius" >
+                    <div class="card-header bg-secondary"> <i class="bi bi-ticket"></i></div>
+                        <div class="card-body bg-light border-radius-body">
                             <h1 class="card-title text-center text-secondary">15</h1>
                             <p class="card-text text-center  text-secondary">Closed Tickets</p>
                         </div>
                     </div>
                 </div> 
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-success mb-3" >
-                    <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                        <div class="card-body bg-light">
+                <div class="card text-white mb-3 border-radius" >
+                    <div class="card-header bg-success"> <i class="bi bi-ticket"></i></div>
+                        <div class="card-body bg-light border-radius-body">
                             <h1 class="card-title text-center text-success">20</h1>
                             <p class="card-text text-center text-success">Total Tickets Created </p>
                         </div>

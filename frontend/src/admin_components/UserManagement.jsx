@@ -4,11 +4,14 @@ import axios from 'axios'
 import AddRoleForm from "../modals/AddRoleForm"
 
 
+
+
 const UserManagement = () => {
     const [getList, setGetList] = useState([{}]);
     const [getConfirmed, setGetConfirmed] = useState([{}]);
     const [getRole, setGetRole] = useState([{}]);
     // const [approvedProfile, setApprovedProfile] = useState(0);
+ 
 
     useEffect(() => {
         axios.get("http://localhost:3001/api/get_role").then((response) => {
@@ -52,8 +55,7 @@ const UserManagement = () => {
             });
         });
     };
- 
-        
+         
 
   return (
     <div>
@@ -81,8 +83,8 @@ const UserManagement = () => {
                 <div className="tab-content" id="myTabContent">
                     <div className="tab-pane fade show active" id="accountRequest" role="tabpanel" aria-labelledby="accountRequest-tab">
                         <div className="row ">
-                            <div className="col-sm-12">
-                                <table className="table table-striped">
+                            <div className="col-lg-12 col-sm-12">
+                                <table className="table table-hover">
                                     <thead>
                                         <tr>
                                             <th >Date Request</th>
@@ -120,7 +122,7 @@ const UserManagement = () => {
                     <div className="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
                         <div className="row  ">
                             <div className="col-sm-12">
-                                <table className="table table-striped">
+                                <table className="table table-hover">
                                     <thead>
                                         <tr>
                                             <td colSpan={5}></td>
@@ -182,7 +184,7 @@ const UserManagement = () => {
                     <div className="tab-pane fade" id="roles" role="tabpanel" aria-labelledby="roles-tab">
                         <div className="row  ">
                             <div className="col-sm-12">
-                                <table className="table table-striped">
+                                <table className="table table-hover">
                                     <thead>
                                         <tr>
                                             <th colSpan={3}><a href="#" data-bs-toggle="modal" data-bs-target="#newRoleForm" >Add New Role</a></th>
@@ -201,7 +203,7 @@ const UserManagement = () => {
                                                 <tr key={items.role_id}>
                                                     <td> {items.description}</td>
                                                     <td> {items.rights}</td>
-                                                    <a href="#" className="" onClick={() => deleteRole(items.role_id)}>Delete</a> 
+                                                    <td> <a href="#" className="" onClick={() => deleteRole(items.role_id)}>Delete</a>  </td>
                                                 </tr>
                                             )
                                         })
