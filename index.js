@@ -260,9 +260,12 @@ app.get("/api/user_profile/:id", (req, res) => {
 });
 
 
-app.get("/api/ticketno", (req, res) => {
-    const queryString = "SELECT * FROM type_uam_ticket";
-    db.query(queryString, (err, result) => {
+app.get("/api/ticketno/:type", (req, res) => {
+    const type = req.params.type;
+    const queryString = "SELECT MAX(IFNULL(t.ticket_id,0)) as ticket_id " +
+                        "FROM type_uam_ticket t " +
+                        "WHERE t.ticket_type = ?";
+    db.query(queryString, type, (err, result) => {
         if(err) {
             console.log("Error: ", err.message);
         } else {
@@ -287,13 +290,12 @@ app.post("/api/add_role", (req,res) => {
                 else{
                     res.send(result)
                 }
-            })
+            });
         }
-    })
+    });
 });
 
 //Delete Role in the db
-
 app.put("/api/deleteRole", (req, res) => {
     const id = req.body.id;
     const queryString = "DELETE FROM role WHERE role_id = ?";
@@ -313,6 +315,22 @@ app.put("/api/deleteRole", (req, res) => {
         }
     });
 });
+
+
+app.post("/api/insertuam", (req, res) => {
+    const { uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby } = req.body;
+    const queryString = "INSERT INTO type_uam_ticket (ticket_id, ticket_type, uam_category, uam_system, uam_operation, uam_validity, request_details,request_reason, requested_by) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(queryString, [uamTicket, "UAM", uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby], 
+        (err, result) => {
+            if(err){
+                console.log("Error: ", err.message);
+            } else {
+                res.send({message: "Ticket successfully added"});
+            }
+    });
+});
+
+
 
 app.listen(server_port, (req, res) => {
     console.log("Server is running at port " + server_port);

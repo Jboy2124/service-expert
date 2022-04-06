@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useNavigate  } from 'react-router-dom';
+// import { useNavigate  } from 'react-router-dom';
 
 
 
@@ -15,7 +15,7 @@ const roleValues = {
 const AddRoleForm = () => {
     const [addRole , setAddRole ] = useState(roleValues);
     const { role, rights } = addRole;
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
   
     
     const addNewRoleValue = (e) => {

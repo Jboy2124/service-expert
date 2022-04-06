@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const UAMForm = () => {
+
+const initialValue = {
+    uamcategory:"", 
+    uamsystem:"", 
+    uamoperation:"", 
+    uamvalidity:"", 
+    uamdetails:"", 
+    uamreason:""
+}
+
+const UAMForm = (props) => {
+    const navigate = useNavigate();
     const [token, setToken] = useState([{}]);
+    const [getTicketNo, setGetTicketNo] = useState([{}]);
     const [getCategory, setGetCategory] = useState([{}]);
     const [getSystem, setGetSystem] = useState([{}]);
     const [getOperation, setGetOperation] = useState([{}]);
-    const time = new Date().toLocaleTimeString();
-    const date = new Date().toLocaleDateString();
-    const dateTime = (`${date} ${time}`)
+    const [addUAM, setAddUAM] = useState(initialValue);
+    const {uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason } = addUAM;
+    // let propsType = props.type;
+    let newTicket ="";
+
+
 
     useEffect(() => {
         const id = parseInt(sessionStorage.getItem("sessionid"));
@@ -17,6 +34,19 @@ const UAMForm = () => {
         });
     },[]);
     
+
+    useEffect(() => {
+        
+        const type = props.type;
+        console.log([props.type]);
+        axios.get(`http://localhost:3001/api/ticketno/${type}`).then((response) => {
+            setGetTicketNo(response.data);
+        });
+        // setTimeout(() => {
+        //     navigate("/ActiveTicketDashUser");
+        // }, 500);
+    }, []);
+
 
 
     useEffect(() => {
@@ -39,10 +69,42 @@ const UAMForm = () => {
     }, []);
 
 
+    let getNo = getTicketNo.map((items) => {
+        return(
+            items.ticket_id
+        )
+    });
+
+
     
+    if(getNo != 0) {
+        const lastTicketSuffix = parseInt(getNo.toString().slice(-3));
+        newTicket = "UAM-"+ (lastTicketSuffix + 1).toString().padStart(3, '0');
+    } else {
+        newTicket = "UAM-001";
+    }
 
+    const handleAddUAMticket = (event) => {
+        event.preventDefault();
+        let uamTicket = event.target.uamTicket.value;
+        let reqby = parseInt(sessionStorage.getItem("sessionid"));
+        axios.post("http://localhost:3001/api/insertuam", {
+            uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby
+        }).then(() => {
+           setAddUAM({
+                uamTicket:"", uamcategory:"", uamsystem:"", 
+                uamoperation:"", uamvalidity:"", uamdetails:"", 
+                uamreason:"", reqby: ""
+           });
+        });
+        toast.success("Ticket successfully added");
+    }
 
-
+    const handleInputChange = (event) => {
+        event.preventDefault();
+        const {name, value} = event.target;
+        setAddUAM({...addUAM, [name] : value});
+    }
 
 
     return (
@@ -55,35 +117,35 @@ const UAMForm = () => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <form > 
+                            <form action='' onSubmit={handleAddUAMticket} > 
                                 <div className="row mb-1">
                                   <label for="" className="col-sm-3 form-label">Ticket No. </label>
                                   <div className="col-sm-9">
-                                    <input type="text" className="form-control" id=""disabled/>
+                                    <input type="text" className="form-control" name='uamTicket' value={newTicket} id=""disabled/>
                                   </div>
                                 </div>
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">Requestor: </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id=""  value={token.map(i => i.fullname)} disabled/>
+                                      <input type="text" className="form-control" id="" name="uamName" value={token.map(i => i.fullname)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">Email: </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="" value={token.map(i => i.email)} disabled/>
+                                      <input type="text" className="form-control" id="" name='uamEmail' value={token.map(i => i.email)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">Department:</label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="" value={token.map(i => i.department)} disabled/>
+                                      <input type="text" className="form-control" id="" name='uamdepartment' value={token.map(i => i.department)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">UAM Category:</label>
                                     <div className="col-sm-9">
-                                        <select className="form-select" aria-label="Default select">
+                                        <select className="form-select" name='uamcategory' onChange={handleInputChange} aria-label="Default select">
                                             <option selected disabled>Select category</option>
                                             {
                                                 getCategory.map((items) => {
@@ -98,7 +160,7 @@ const UAMForm = () => {
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">System:</label>
                                     <div className="col-sm-9">
-                                        <select className="form-select" aria-label="Default select">
+                                        <select className="form-select" name='uamsystem' onChange={handleInputChange} aria-label="Default select">
                                             <option selected disabled>Select system</option>
                                             {
                                                 getSystem.map((items) => {
@@ -113,7 +175,7 @@ const UAMForm = () => {
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">Operation Rights:</label>
                                     <div className="col-sm-9">
-                                        <select className="form-select" aria-label="Default select">
+                                        <select className="form-select" name='uamoperation' onChange={handleInputChange} aria-label="Default select">
                                             <option selected disabled>Select rights</option>
                                             {
                                                 getOperation.map((items) => {
@@ -128,24 +190,24 @@ const UAMForm = () => {
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">Validity Period:</label>
                                     <div className="col-sm-9">
-                                        <input id="startDate" className="form-control" type="datetime-local" />
+                                        <input id="startDate" className="form-control" name='uamvalidity' onChange={handleInputChange} type="datetime-local" />
                                     </div>
                                 </div>
                                 <div className="row mb-1">
                                     <label for="" className="col-sm-3 form-label">Request Details:  </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="" placeholder="Specify request details"/>
+                                      <input type="text" className="form-control" id="" name='uamdetails' onChange={handleInputChange} placeholder="Specify request details"/>
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <label for="" className="col-sm-3 form-label">Reason for request:  </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id=""  placeholder="Specify reason for request" />
+                                      <input type="text" className="form-control" id="" name='uamreason' onChange={handleInputChange}  placeholder="Specify reason for request" />
                                     </div> 
                                 </div>                           
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" className="btn buttonStyleGlobal">Submit Ticket</button>
+                                    <button type="submit" className="btn buttonStyleGlobal"  >Submit Ticket</button>
                                 </div>
                               </form>
                         </div>
@@ -167,7 +229,7 @@ const UAMForm = () => {
                             <div className="row mb-1">
                               <label for="" className="col-sm-3 form-label">Ticket No. </label>
                               <div className="col-sm-9">
-                                <input type="text" className="form-control" id=""disabled />
+                                <input type="text" className="form-control" value="" id=""disabled />
                               </div>
                             </div>
                             <div className="row mb-1">

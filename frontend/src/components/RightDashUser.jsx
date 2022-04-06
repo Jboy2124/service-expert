@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import UAMForm from '../modals/UAMForm'
 import Navbar from './Navbar'
 
@@ -7,6 +7,19 @@ import Navbar from './Navbar'
 
 
 const RightDashUser = () => {
+    const [getType, setGetType] = useState('');
+
+
+
+    const handleGetTicketType = (ticketType) => {
+
+        console.log(ticketType);
+        // setGetType(ticketType);
+    }
+
+
+
+
   return (
     <div >
             <div id="rightDashboard" className="col-lg-12 col-sm-8 ">
@@ -17,8 +30,8 @@ const RightDashUser = () => {
                                 <button className="btn dropdown-toggle buttonStyleGlobal" type="button" id="dropdownMenuButtonCreate" data-bs-toggle="dropdown" aria-expanded="false"> Create New Ticket
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButtonCreate">
-                                    <li><a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdropUAM" >User Access Management</a></li>
-                                    <li><a className="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdropSR">Service Request</a></li>
+                                    <li><a className="dropdown-item" href="#" data-bs-toggle="modal" onClick={() => {handleGetTicketType("UAM")}} data-bs-target="#staticBackdropUAM">User Access Management</a></li>
+                                    <li><a className="dropdown-item" href="#" data-bs-toggle="modal" onClick={() => {handleGetTicketType("SR")}} data-bs-target="#staticBackdropSR">Service Request</a></li>
                                 </ul>
                           </div> 
                       </div>  
@@ -53,7 +66,7 @@ const RightDashUser = () => {
                     </div>
                 </div>
             </div>
-        <UAMForm/>
+        <UAMForm type="UAM" />
     </div>
   )
 }
