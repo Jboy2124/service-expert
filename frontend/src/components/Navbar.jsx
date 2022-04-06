@@ -28,7 +28,7 @@ const Navbar = (props) => {
                   <span class="navbar-toggler-icon "></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <ul class="navbar-nav justify-content-end flex-grow-1">
+                    <ul class="nav justify-content-end flex-grow-1">
                           <li class="list-inline-item">{time}</li>
                           <li class="list-inline-item">{date}</li>
                           <li class="list-inline-item"><i class="bi bi-bell"></i></li>
