@@ -57,34 +57,34 @@ const UAMForm = () => {
                         <div className="modal-body">
                             <form > 
                                 <div className="row mb-1">
-                                  <label for="" className="col-sm-3 form-label">Ticket No. </label>
+                                  <label  className="col-sm-3 form-label">Ticket No. </label>
                                   <div className="col-sm-9">
                                     <input type="text" className="form-control" id=""disabled/>
                                   </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Requestor: </label>
+                                    <label  className="col-sm-3 form-label">Requestor: </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id=""  value={token.map(i => i.fullname)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Email: </label>
+                                    <label  className="col-sm-3 form-label">Email: </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" value={token.map(i => i.email)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Department:</label>
+                                    <label  className="col-sm-3 form-label">Department:</label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" value={token.map(i => i.department)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">UAM Category:</label>
+                                    <label className="col-sm-3 form-label">UAM Category:</label>
                                     <div className="col-sm-9">
                                         <select className="form-select" aria-label="Default select">
-                                            <option selected disabled>Select category</option>
+                                            <option defaultValue disabled>Select category</option>
                                             {
                                                 getCategory.map((items) => {
                                                     return(
@@ -96,7 +96,7 @@ const UAMForm = () => {
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">System:</label>
+                                    <label  className="col-sm-3 form-label">System:</label>
                                     <div className="col-sm-9">
                                         <select className="form-select" aria-label="Default select">
                                             <option selected disabled>Select system</option>
@@ -111,10 +111,10 @@ const UAMForm = () => {
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Operation Rights:</label>
+                                    <label className="col-sm-3 form-label">Operation Rights:</label>
                                     <div className="col-sm-9">
                                         <select className="form-select" aria-label="Default select">
-                                            <option selected disabled>Select rights</option>
+                                            <option defaultValue disabled>Select rights</option>
                                             {
                                                 getOperation.map((items) => {
                                                     return (
@@ -126,19 +126,19 @@ const UAMForm = () => {
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Validity Period:</label>
+                                    <label className="col-sm-3 form-label">Validity Period:</label>
                                     <div className="col-sm-9">
                                         <input id="startDate" className="form-control" type="datetime-local" />
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Request Details:  </label>
+                                    <label className="col-sm-3 form-label">Request Details:  </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" placeholder="Specify request details"/>
                                     </div>
                                 </div>
                                 <div className="row mb-3">
-                                    <label for="" className="col-sm-3 form-label">Reason for request:  </label>
+                                    <label className="col-sm-3 form-label">Reason for request:  </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id=""  placeholder="Specify reason for request" />
                                     </div> 

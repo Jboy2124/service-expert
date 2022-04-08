@@ -18,7 +18,7 @@ const TicketDetailsModal = () => {
    
   return (
     <div>
-        <div className="modal fade" id="ticketDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ticketDetailsLabel" aria-hidden="true">
+        <div className="modal fade" id="ticketDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="ticketDetailsLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -95,7 +95,6 @@ const TicketDetailsModal = () => {
                             </thead>
                         </table>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <ExportToExcel apiData={data} fileName={fileName} />
                             </div>
                         </div>
