@@ -275,6 +275,21 @@ app.get("/api/ticketno/:type", (req, res) => {
 });
 
 
+app.get("/api/srticketno/:type", (request, response) => {
+    let id = request.params.type;
+    const queryString = "SELECT MAX(IFNULL(ticket_id, 0)) as ticket_id FROM type_sr_ticket WHERE ticket_type = ?";
+    db.query(queryString, id, (error, result) => {
+        if(error) {
+            console.log("Error: " + error.message);
+        } else {
+            response.send(result);
+        }
+    });
+});
+
+
+
+
 //Adding new role in the database 
 app.post("/api/add_role", (req,res) => {
     const { role, rights } = req.body;
@@ -319,8 +334,8 @@ app.put("/api/deleteRole", (req, res) => {
 
 app.post("/api/insertuam", (req, res) => {
     const { uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby } = req.body;
-    const queryString = "INSERT INTO type_uam_ticket (ticket_id, ticket_type, uam_category, uam_system, uam_operation, uam_validity, request_details,request_reason, requested_by) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(queryString, [uamTicket, "UAM", uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby], 
+    const queryString = "INSERT INTO type_uam_ticket (ticket_id, ticket_type, uam_category, uam_system, uam_operation, uam_validity, request_details,request_reason, requested_by, ticket_status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(queryString, [uamTicket, "UAM", uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby, "For Approval"], 
         (err, result) => {
             if(err){
                 console.log("Error: ", err.message);
@@ -329,6 +344,97 @@ app.post("/api/insertuam", (req, res) => {
             }
     });
 });
+
+
+app.post("/api/insertsr", (request, response) => {
+    const {  srTicketNo, srCategory, srSystem, srActivity, srDetails, 
+            srSched1, srSched2, srSeverity, srPurpose, requested } = request.body;
+    console.log("Category: " + srCategory);
+    const queryString = "INSERT INTO type_sr_ticket (ticket_id, ticket_type, sr_category, sr_system, activity_name, " + 
+                        "activity_details, activity_start, activity_end, severity, purpose, requested_by, ticket_status) " +
+                        "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    db.query(queryString, [srTicketNo, "SR", srCategory, srSystem, srActivity, srDetails, srSched1, srSched2, srSeverity, srPurpose, requested, "For Approval"], (error, result) => {
+        if(error) {
+            console.log("Error", error.message);
+        } else {
+            response.send({ message: "Ticket successfully added" });
+        }
+    })
+});
+
+
+//Download ticket list
+
+app.get("/api/download", (req, res) => {
+    const queryString = "SELECT type_uam_ticket.ticket_id, date_format(type_uam_ticket.date_created, '%Y-%c-%d %H:%i:%s') as date_requested, " +
+    "CONCAT(profile.first_name,' ',profile.last_name) as fullname," +
+    "profile.email, " +
+    "profile.department, " +
+    "type_uam_category.category_name as request_category, " +
+    "type_uam_operation.operation_name as operation_rights, " +
+    "ticket_system.system_name as system_name " +
+    "FROM type_uam_ticket " +
+    "LEFT JOIN profile on requested_by = approver_id " +
+    "LEFT JOIN ticket_system on type_uam_ticket.uam_system = ticket_system.system_id " +
+    "LEFT JOIN type_uam_category on type_uam_ticket.uam_category = type_uam_category.category_id " +
+    "LEFT JOIN type_uam_operation on type_uam_ticket.uam_operation = type_uam_operation.operation_id ";
+    db.query(queryString, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+app.get("/api/getactiveuamtickets/:id", (req, res) => {
+    let id = req.params.id;
+    console.log(id);
+    const queryString = "SELECT * " +
+                        "FROM type_uam_ticket t " +
+                        "LEFT JOIN type_uam_category c ON t.uam_category = c.category_id " +
+                        "WHERE requested_by = ? "+
+                        "AND t.ticket_status = 'For Approval'";
+    db.query(queryString, id, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+
+app.get("/api/getsrcategory", (request, response) => {
+    const queryString = "SELECT * FROM type_sr_category";
+    db.query(queryString, (error, result) => {
+        if(error) {
+            console.log("Error: ", error.message);
+        } else {
+            response.send(result);
+        }
+    })
+});
+
+
+app.get("/api/getactivesrtickets/:id", (request, response) => {
+        const id = request.params.id;
+        const query = "SELECT * " +
+                      "FROM type_sr_ticket t " +
+                      "LEFT JOIN type_sr_category c ON t.sr_category = c.category_id " +
+                      "WHERE t.requested_by = ? " +
+                      "AND t.ticket_status = 'For Approval'";
+        db.query(query, id, (err, result) => {
+            if(err) {
+                console.log("Error: ", err.message);
+            } else {
+                response.send(result);
+            }
+        });
+    });
+
 
 
 

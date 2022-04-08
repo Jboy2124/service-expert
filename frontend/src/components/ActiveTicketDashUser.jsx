@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
 import ActiveTicketModal from '../modals/ActiveTicketModal'
 
 const ActiveTicketDashUser = () => {
+    const [getActiveUAM, setGetActiveUAM] = useState([{}]);
+    const [getActiveSR, setGetActiveSR] = useState([{}]);
+
+    useEffect(() => {
+        let id = parseInt(sessionStorage.getItem("sessionid"));
+        console.log(id);
+        axios.get(`http://localhost:3001/api/getactiveuamtickets/${id}`).then((response) => {
+            setGetActiveUAM(response.data);
+        });
+
+        axios.get(`http://localhost:3001/api/getactivesrtickets/${id}`).then((response) => {
+            setGetActiveSR(response.data);
+        });
+    }, []);
+
+
+
   return (
     <div >
         <div id="rightDashboard" className="col-lg-12">
@@ -36,17 +54,23 @@ const ActiveTicketDashUser = () => {
                                             <tr>
                                                 <th scope="col">Ticket No.</th>
                                                 <th scope="col">Date Requested</th>
-                                                <th scope="col">Type of Request</th>
+                                                <th scope="col">Category</th>
                                                 <th scope="col">Status</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeUAMTicketModal">TN-001</a></th>
-                                                <td>03/22/2022 08:00:00</td>
-                                                <td>UAM - New User Account Creation</td>
-                                                <td>For review and approval</td>
-                                            </tr>
+                                            {
+                                                getActiveUAM.map((items)=>{
+                                                    return(
+                                                        <tr>
+                                                            <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeUAMTicketModal">{items.ticket_id}</a></th>
+                                                            <td>{items.date_created}</td>
+                                                            <td>{items.category_name}</td>
+                                                            <td>{items.ticket_status}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
                                             </tbody>
                                         </table>
                                     </div>
@@ -60,17 +84,29 @@ const ActiveTicketDashUser = () => {
                                             <tr>
                                                 <th scope="col">Ticket No.</th>
                                                 <th scope="col">Date Requested</th>
-                                                <th scope="col">Type of Request</th>
+                                                <th scope="col">Category</th>
                                                 <th scope="col">Status</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
+                                            {/* <tr>
                                                 <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeSRTicketModal">TN-001</a></th>
                                                 <td>03/22/2022 08:00:00</td>
                                                 <td>SR - New User Account Creation</td>
                                                 <td>For review and approval</td>
-                                            </tr>
+                                            </tr> */}
+                                            {
+                                                getActiveSR.map((i)=>{
+                                                    return(
+                                                        <tr>
+                                                            <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeSRTicketModal">{i.ticket_id}</a></th>
+                                                            <td>{i.date_created}</td>
+                                                            <td>{i.category_name}</td>
+                                                            <td>{i.ticket_status}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
                                             </tbody>
                                         </table>
                                     </div>

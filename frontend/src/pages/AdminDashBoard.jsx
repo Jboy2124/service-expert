@@ -24,7 +24,7 @@ const AdminDashBoard = () => {
         <Navbar name={getName}/>
         {/* <Navbar /> */}
         <div className="row noMargin">
-            <div id="sideBarDash" className="col-lg-2 col-sm-4">
+            <div id="sideBarDash" className="col-lg-2 col-sm-3">
                 <div className="row">
                     <div className="mt-3">  
                         <nav id="sideBarLinks" className="nav flex-column ">
@@ -44,7 +44,7 @@ const AdminDashBoard = () => {
                     </div>
                 </div>  
             </div>
-            <div id="rightDashboard" className="col-lg-10 col-sm-8 ">
+            <div id="rightDashboard" className="col-lg-10 col-sm-9 ">
                 {page === "AdminOverview" && <AdminOverview />}
                 {page === "UserManagement" && <UserManagement />}
                 {page === "TicketManagement" && <TicketManagement />}

@@ -6,19 +6,15 @@ import Navbar from './Navbar'
 
 
 
+
 const RightDashUser = () => {
+    let ttype = "";
     const [getType, setGetType] = useState('');
 
-
-
     const handleGetTicketType = (ticketType) => {
-
-        console.log(ticketType);
-        // setGetType(ticketType);
+        ttype = ticketType;
     }
-
-
-
+    
 
   return (
     <div >
@@ -38,35 +34,35 @@ const RightDashUser = () => {
                 </div>
                 <div className="row m-3 ">
                     <div className="col-lg-4 col-sm-6 overflow">
-                    <div class="card text-white bg-danger mb-3" >
-                        <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                            <div class="card-body bg-light">
-                                <h1 class="card-title text-center  text-danger">5</h1>
-                                <p class="card-text text-center  text-danger">Active Tickets</p>
+                    <div className="card text-white bg-danger mb-3" >
+                        <div className="card-header"> <i className="bi bi-ticket"></i></div>
+                            <div className="card-body bg-light">
+                                <h1 className="card-title text-center  text-danger">5</h1>
+                                <p className="card-text text-center  text-danger">Active Tickets</p>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-4 col-sm-6 overflow">
-                    <div class="card text-white bg-secondary mb-3" >
-                        <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                            <div class="card-body bg-light">
-                                <h1 class="card-title text-center text-secondary">15</h1>
-                                <p class="card-text text-center  text-secondary">Closed Tickets</p>
+                    <div className="card text-white bg-secondary mb-3" >
+                        <div className="card-header"> <i className="bi bi-ticket"></i></div>
+                            <div className="card-body bg-light">
+                                <h1 className="card-title text-center text-secondary">15</h1>
+                                <p className="card-text text-center  text-secondary">Closed Tickets</p>
                             </div>
                         </div>
                     </div> 
                     <div className="col-lg-4 col-sm-6 overflow">
-                    <div class="card text-white bg-success mb-3" >
-                        <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                            <div class="card-body bg-light">
-                                <h1 class="card-title text-center text-success">20</h1>
-                                <p class="card-text text-center text-success">Total Tickets Created </p>
+                    <div className="card text-white bg-success mb-3" >
+                        <div className="card-header"> <i className="bi bi-ticket"></i></div>
+                            <div className="card-body bg-light">
+                                <h1 className="card-title text-center text-success">20</h1>
+                                <p className="card-text text-center text-success">Total Tickets Created </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        <UAMForm type="UAM" />
+        <UAMForm />
     </div>
   )
 }

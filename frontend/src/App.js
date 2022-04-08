@@ -8,6 +8,8 @@ import Dashboard from './components/Dashboard';
 import AdminDashBoard from './pages/AdminDashBoard';
 import UserDashBoard from './pages/UserDashBoard';
 import ApproverDashBoard from './pages/ApproverDashBoard';
+import axios from 'axios';
+axios.defaults.baseURL="http://localhost:3001";
 
 
 

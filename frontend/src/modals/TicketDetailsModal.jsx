@@ -1,118 +1,103 @@
 import React from 'react'
+import { ExportToExcel } from '../admin_components/ExportToExcel';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
 
 const TicketDetailsModal = () => {
+
+    const [data, setData] = useState([])
+    const fileName = "closed_ticket_list"; // here enter filename for your excel file
+  
+    useEffect(() => {
+      const fetchData = () =>{
+       axios.get('http://localhost:3001/api/download').then(r => setData(r.data) )
+      }
+      fetchData()
+    }, [])
+   
   return (
     <div>
-        <div class="modal fade" id="ticketDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ticketDetailsLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ticketDetailsLabel">Ticket Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="ticketDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ticketDetailsLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="ticketDetailsLabel">Ticket Details</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <form > 
-                                <div class="row mb-1">
-                                  <label for="" class="col-sm-3 form-label">Ticket No. </label>
-                                  <div class="col-sm-9">
-                                    <input type="text" class="form-control" id=""disabled/>
-                                  </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Date and Time: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Requestor: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Email: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Department:</label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Type of Request:</label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Request Category:</label>
-                                    <div class="col-sm-9">
-                                          <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">System:</label>
-                                    <div class="col-sm-9">
-                                          <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Operation Rights:</label>
-                                    <div class="col-sm-9">
-                                          <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Validity Period:</label>
-                                    <div class="col-sm-9">
-                                          <input type="text" class="form-control" id="" disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <label for="" class="col-sm-3 form-label">Request Details:  </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id=""  disabled/>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="" class="col-sm-3 form-label">Reason for request:  </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id=""   disabled />
-                                    </div> 
-                                </div>   
-                                <div class="row mb-3">
-                                    <label for="" class="col-sm-3 form-label">Approver: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id=""   disabled />
-                                    </div> 
-                                </div> 
-                                <div class="row mb-3">
-                                    <label for="" class="col-sm-3 form-label">Implementor: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id=""   disabled />
-                                    </div> 
-                                </div> 
-                                <div class="row mb-3">
-                                    <label for="" class="col-sm-3 form-label">Attached Logs: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id=""   disabled />
-                                    </div> 
-                                </div> 
-                                <div class="row mb-3">
-                                    <label for="" class="col-sm-3 form-label">Remarks: </label>
-                                    <div class="col-sm-9">
-                                      <input type="text" class="form-control" id=""   disabled />
-                                    </div> 
-                                </div>                           
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn buttonStyleGlobal">Download Ticket Details</button>
-                                </div>
-                              </form>
+                        <div className="modal-body">
+                        <table className='table table-bordered'>
+                            <thead>
+                                <tr>
+                                    <th>Date Requested:</th>
+                                    <td>03-03-2020 08:08:00pm</td>
+                                </tr>
+                                <tr>
+                                    <th>Requestor:</th>
+                                    <td>Elizabeth Santos</td>
+                                </tr>
+                                <tr>
+                                    <th>Email:</th>
+                                    <td>mail@company.com</td>
+                                </tr>
+                                <tr>
+                                    <th>Department:</th>
+                                    <td>Engineering</td>
+                                </tr>
+                                <tr>
+                                    <th>Type of Request:</th>
+                                    <td>User Access Management</td>
+                                </tr>
+                                <tr>
+                                    <th>Request Category:</th>
+                                    <td>New User Account Creation</td>
+                                </tr>
+                                <tr>
+                                    <th>System:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Operation Rights:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Validity Period:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Request Details:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Reason for Request:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>First Approver:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Second Approver:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Implementor:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Attached Logs:</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Remarks:</th>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                        </table>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <ExportToExcel apiData={data} fileName={fileName} />
+                            </div>
                         </div>
                     </div>
                 </div>
