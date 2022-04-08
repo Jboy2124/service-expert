@@ -29,8 +29,8 @@ const ApproverDashBoard = () => {
                                 <i className="bi bi-border-all"></i> Dashboard
                             </a>
                             <hr className='divider'/>
-                            <a class="nav-link" href="#" onClick={() => setPage("ApproverTicketMng")}>
-                                <i class="bi bi-ticket"></i> Tickets
+                            <a className="nav-link" href="#" onClick={() => setPage("ApproverTicketMng")}>
+                                <i className="bi bi-ticket"></i> Tickets
                             </a>
                             <hr className='divider'/> 
                             <a className="nav-link" href="#" onClick={() => setPage("TicketHistory")}>

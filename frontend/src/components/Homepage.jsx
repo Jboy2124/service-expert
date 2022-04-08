@@ -27,7 +27,7 @@ export const Homepage = () => {
             }).then((response) => {
                 if(response.data.message) {
                     toast.error(response.data.message, {
-                        autoClose : 200
+                        autoClose : 500
                     });
                 } else {
                     navigateToSignUp("/AdminDashBoard", { state: { name: response.data[0].username, role: "" }});
@@ -39,11 +39,17 @@ export const Homepage = () => {
             }).then((response) => {
                 if(response.data.message) {
                     toast.error(response.data.message, {
-                        autoClose: 200
+                        autoClose: 500
                     }); 
                 } else {
-                    sessionStorage.setItem("sessionid", response.data[0].approver_id);
-                    navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    if (response.data[0].role === 2 ) {
+                        sessionStorage.setItem("sessionid", response.data[0].approver_id);
+                        navigateToSignUp("/ApproverDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    } else {
+                        sessionStorage.setItem("sessionid", response.data[0].approver_id);
+                        navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    }
+                   
                 }
             });
         }
@@ -88,7 +94,7 @@ export const Homepage = () => {
                         <div className="col-lg-12 d-flex justify-content-center mb-3 ">
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name='admin_chkbox'  onChange={handleSelectedChk} value="" id="flexCheckDefault"></input>
-                                <label id='form-check-label-admin' className="form-check-label" for="flexCheckDefault">
+                                <label id='form-check-label-admin' className="form-check-label" htmlFor="flexCheckDefault">
                                     Service Expert Admin
                                 </label>
                             </div><br/>

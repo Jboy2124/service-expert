@@ -4,14 +4,14 @@ import React from 'react'
 const ForApprovalTicket = () => {
   return (
     <div>
-         <div class="modal fade" id="forApprovalTicket"  tabindex="-1" aria-labelledby="forApprovalTicketLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="forApprovalTicketLabel">TN: 001 - Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         <div className="modal fade" id="forApprovalTicket"  tabIndex="-1" aria-labelledby="forApprovalTicketLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="forApprovalTicketLabel">TN: 001 - Details</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <table className='table table-bordered'>
                             <thead>
                                 <tr>
@@ -56,7 +56,7 @@ const ForApprovalTicket = () => {
                                 </tr>
                             </thead>
                         </table>
-                            <div class="modal-footer">
+                            <div className="modal-footer">
                                 <button className='btn btn-secondary'><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#returnTicket">Return Ticket for Revision</a> </button>
 
                                 <button className='btn buttonStyleGlobal '><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#approveTicket">Approve Ticket</a> </button>
@@ -67,64 +67,64 @@ const ForApprovalTicket = () => {
             </div>
         </div>
         <div>
-         <div class="modal fade" id="returnTicket"  tabindex="-1" aria-labelledby="returnTicketLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="returnTicketLabel">TN: 001 - Return Ticket for Revision</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         <div className="modal fade" id="returnTicket"  tabIndex="-1" aria-labelledby="returnTicketLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="returnTicketLabel">TN: 001 - Return Ticket for Revision</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <form > 
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Date Requested </label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name='' disabled  />
+                            <div className="row mb-1">
+                                <label className="col-sm-3 form-label">Date Requested </label>
+                                <div className="col-sm-9">
+                                    <input type="text" className="form-control" name='' disabled  />
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Reason for Return </label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name=''   />
+                            <div className="row mb-1">
+                                <label className="col-sm-3 form-label">Reason for Return </label>
+                                <div className="col-sm-9">
+                                    <input type="text" className="form-control" name=''   />
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Remarks </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" placeholder="Leave a comment here" ></textarea>
+                            <div className="row mb-1">
+                                <label  className="col-sm-3 form-label">Remarks </label>
+                                <div className="col-sm-9">
+                                    <textarea className="form-control" placeholder="Leave a comment here" ></textarea>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn buttonStyleGlobal " >Return Ticket</button>
+                            <div className="modal-footer">
+                                <button type="submit" className="btn buttonStyleGlobal " >Return Ticket</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="approveTicket"  tabindex="-1" aria-labelledby="approveTicketLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="approveTicketLabel">TN: 001 </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="approveTicket"  tabIndex="-1" aria-labelledby="approveTicketLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="approveTicketLabel">TN: 001 </h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <form > 
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Date Requested </label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name='' disabled  />
+                            <div className="row mb-1">
+                                <label  className="col-sm-3 form-label">Date Requested </label>
+                                <div className="col-sm-9">
+                                    <input type="text" className="form-control" name='' disabled  />
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Remarks </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" placeholder="Leave a comment here" ></textarea>
+                            <div className="row mb-1">
+                                <label className="col-sm-3 form-label">Remarks </label>
+                                <div className="col-sm-9">
+                                    <textarea className="form-control" placeholder="Leave a comment here" ></textarea>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn buttonStyleGlobal " >Approve Ticket</button>
+                            <div className="modal-footer">
+                                <button type="submit" className="btn buttonStyleGlobal " >Approve Ticket</button>
                             </div>
                         </form>
                     </div>
@@ -132,14 +132,14 @@ const ForApprovalTicket = () => {
             </div>
         </div>
 
-        <div class="modal fade" id="ticketDetailsinActiveTab"  tabindex="-1" aria-labelledby="ticketDetailsinActiveTabLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ticketDetailsinActiveTabLabel">TN: 001 - Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="ticketDetailsinActiveTab"  tabIndex="-1" aria-labelledby="ticketDetailsinActiveTabLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="ticketDetailsinActiveTabLabel">TN: 001 - Details</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <table className='table table-bordered'>
                             <thead>
                                 <tr>
@@ -188,7 +188,7 @@ const ForApprovalTicket = () => {
                                 </tr>
                             </thead>
                         </table>
-                            <div class="modal-footer">
+                            <div className="modal-footer">
                                 <button className='btn btn-secondary'><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#isApprovalTicket">For I.S Approval</a> </button>
                                 <button className='btn buttonStyleGlobal '><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#implementTicket">Implement Ticket</a> </button>
                 
@@ -197,58 +197,58 @@ const ForApprovalTicket = () => {
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="isApprovalTicket"  tabindex="-1" aria-labelledby="isApprovalTicketLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="isApprovalTicketLabel">TN: 001 - For I.S Approval</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="isApprovalTicket"  tabIndex="-1" aria-labelledby="isApprovalTicketLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="isApprovalTicketLabel">TN: 001 - For I.S Approval</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <form > 
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Date Requested </label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name='' disabled  />
+                            <div className="row mb-1">
+                                <label  className="col-sm-3 form-label">Date Requested </label>
+                                <div className="col-sm-9">
+                                    <input type="text" className="form-control" name='' disabled  />
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Remarks </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" placeholder="Leave a comment here" ></textarea>
+                            <div className="row mb-1">
+                                <label  className="col-sm-3 form-label">Remarks </label>
+                                <div className="col-sm-9">
+                                    <textarea className="form-control" placeholder="Leave a comment here" ></textarea>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn buttonStyleGlobal " >Transfer Ticket for IS Approval</button>
+                            <div className="modal-footer">
+                                <button type="submit" className="btn buttonStyleGlobal " >Transfer Ticket for IS Approval</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="implementTicket"  tabindex="-1" aria-labelledby="implementTicketLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="implementTicketLabel">TN: 001 - For Implementation</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div className="modal fade" id="implementTicket"  tabIndex="-1" aria-labelledby="implementTicketLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="implementTicketLabel">TN: 001 - For Implementation</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <form > 
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Date Requested </label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name='' disabled  />
+                            <div className="row mb-1">
+                                <label  className="col-sm-3 form-label">Date Requested </label>
+                                <div className="col-sm-9">
+                                    <input type="text" className="form-control" name='' disabled  />
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="" class="col-sm-3 form-label">Remarks </label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" placeholder="Leave a comment here" ></textarea>
+                            <div className="row mb-1">
+                                <label  className="col-sm-3 form-label">Remarks </label>
+                                <div className="col-sm-9">
+                                    <textarea className="form-control" placeholder="Leave a comment here" ></textarea>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn buttonStyleGlobal " >Implement Activity</button>
+                            <div className="modal-footer">
+                                <button type="submit" className="btn buttonStyleGlobal " >Implement Activity</button>
                             </div>
                         </form>
                     </div>

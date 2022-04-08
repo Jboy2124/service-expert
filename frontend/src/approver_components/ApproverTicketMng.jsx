@@ -20,9 +20,6 @@ const ApproverTicketMng = () => {
                     <li className="nav-item" role="presentation">
                         <a className="nav-link" id="activeTicketsApprover-tab" data-bs-toggle="tab" href="#activeTicketsApprover" role="tab" aria-controls="activeTicketsApprover" aria-selected="false">Active Tickets</a>
                     </li>
-                    {/* <li className="nav-item" role="presentation">
-                        <a className="nav-link" id="roles-tab" data-bs-toggle="tab" href="#roles" role="tab" aria-controls="roles" aria-selected="false">Roles</a>
-                    </li>        */}
                 </ul>
             </div>
             <div className="card-body">
@@ -91,9 +88,7 @@ const ApproverTicketMng = () => {
                                             <td >Engineering</td>
                                             <td> UAM- New Account Request</td>
                                             <td> Approved - For Implementation </td>
-                                        </tr>
-                                        
-                                    
+                                        </tr>                                   
                                     </tbody>
                                 </table>
                             </div>
