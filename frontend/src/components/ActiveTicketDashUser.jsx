@@ -10,7 +10,7 @@ const ActiveTicketDashUser = () => {
 
     useEffect(() => {
         let id = parseInt(sessionStorage.getItem("sessionid"));
-        console.log(id);
+        // console.log(id);
         axios.get(`/api/getactiveuamtickets/${id}`).then((response) => {
             setGetActiveUAM(response.data);
         });

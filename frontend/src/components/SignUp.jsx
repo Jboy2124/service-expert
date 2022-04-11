@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
+
 const initialValue = {
     firstname: "", lastname: "",
     email: "", 
@@ -21,24 +22,33 @@ const SignUp = () => {
     const [getRole, setGetRole] = useState([]);
     const [ addAccount, setAddAccount ] = useState(initialValue);
     const { firstname, lastname, email, password, confirmPassword, department, role } = addAccount;
-    const navigateHomepage = useNavigate();
+    var navigateHomepage = useNavigate();
 
     const handleSubmitValue = (e) => {
         e.preventDefault();
 
-        axios.post("http://localhost:3001/api/account_registration", { 
+        if(password !== confirmPassword) {
+            toast.error("Password and Confirm Password does not match!", {autoClose: 1000})
+        } 
+        else {
+            axios.post("http://localhost:3001/api/account_checking", { 
             firstname, lastname, email, password, confirmPassword, department, role
-        }).then(() => {
-            setAddAccount({
-                firstname: "", lastname: "", email: "", password: "", confirmPassword: "", department: "", role: ""
-            });
-        });
-
-        toast.success("Record successfully added");
-        setTimeout(() => {
-            navigateHomepage("/");
-        }, 500);
+            }).then((response) => {
+                if (!response.data.message) {
+                    setAddAccount({ firstname: "", lastname: "", email: "", password: "", confirmPassword: "", department: "", role: ""});
+                    toast.success("Registration submitted and for approval" , {autoClose: 2000});
+                    navigateHomepage("/");  
+                    
+                } 
+                else {
+                    toast.error("Email already in use", {
+                        autoClose: 1000
+                    });
+                }
+            });  
+        }              
     }
+    
     
     const handleInputChange = (event) => {
         event.preventDefault();
@@ -85,7 +95,7 @@ const SignUp = () => {
                     </div>
                     <div className="form mb-2">
                         <select className="form-select" onChange={handleInputChange} name='role'>
-                            <option defaultValue disabled>Select Role</option>
+                            <option selected disabled>Select Role</option>
                                 {
                                     getRole.map((items) => {
                                         return(
