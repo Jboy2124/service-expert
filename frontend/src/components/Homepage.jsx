@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import "../css/homepage.css";
 import logo from "../images/sx logo 3a.jpg";
 import { useNavigate } from "react-router-dom";
@@ -36,11 +36,12 @@ export const Homepage = () => {
         }  else {
             axios.post("http://localhost:3001/api/auth", {
                 login_username, login_password
-            }).then((response) => {
+            }).then((response, res) => {
                 if(response.data.message) {
                     toast.error(response.data.message, {
                         autoClose: 500
                     }); 
+                    
                 } else {
                     if (response.data[0].role === 2 ) {
                         sessionStorage.setItem("sessionid", response.data[0].approver_id);
@@ -79,7 +80,7 @@ export const Homepage = () => {
          <div className="main_container">
             <div id="form_container"className="row">
                 <div id="left_container" className="col-sm-6 "> 
-                    <img id="login_logo" className="img-fluid" src={logo} />
+                    <img id="login_logo" className="img-fluid" src={logo} alt="sx logo" />
                 </div>
                 <div id="right_container" className="col-sm-6 ">
                     <p id="p_reg"className="h2">Welcome</p>
