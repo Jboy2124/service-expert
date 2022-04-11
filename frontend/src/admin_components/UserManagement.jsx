@@ -46,14 +46,14 @@ const UserManagement = () => {
     };
 
     const deleteSelectedID = (id) => {
-        // axios.put("http://localhost:3001/api/delete_profile", { id }).then((response) => {
-        //     setTimeout(() => {
-        //         setGetList(response.data);
-        //     }, 500);
-        //     toast.success("Account has been declined", {
-        //         autoClose: 1000
-        //     });
-        // });
+        axios.put("http://localhost:3001/api/delete_profile", { id }).then((response) => {
+            setTimeout(() => {
+                setGetList(response.data);
+            }, 500);
+            toast.success("Account has been declined", {
+                autoClose: 1000
+            });
+        });
     };
 
     const deleteRole = (id) => {
