@@ -38,7 +38,7 @@ const UAMForm = () => {
 
     useEffect(() => {
         const id = parseInt(sessionStorage.getItem("sessionid"));
-        axios.get(`http://localhost:3001/api/user_profile/${id}`,).then((response) => {
+        axios.get(`/api/user_profile/${id}`,).then((response) => {
             setToken(response.data);
         });
     },[]);
@@ -46,14 +46,14 @@ const UAMForm = () => {
 
     useEffect(() => {
         let type = "UAM";
-        axios.get(`http://localhost:3001/api/ticketno/${type}`).then((response) => {
+        axios.get(`/api/ticketno/${type}`).then((response) => {
             setGetTicketNo(response.data);
         });
     }, []);
 
     useEffect(() => {
         let type = "SR";
-        axios.get(`http://localhost:3001/api/srticketno/${type}`).then((response) => {
+        axios.get(`/api/srticketno/${type}`).then((response) => {
             setGetSRTicketNo(response.data);
         });
     }, []);
@@ -61,19 +61,19 @@ const UAMForm = () => {
 
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/category").then((response) => {
+        axios.get("/api/category").then((response) => {
             setGetCategory(response.data);
         });
 
-        axios.get("http://localhost:3001/api/getsystem").then((response) => {
+        axios.get("/api/getsystem").then((response) => {
             setGetSystem(response.data);
         });
 
-        axios.get("http://localhost:3001/api/getoperation").then((response) => {
+        axios.get("/api/getoperation").then((response) => {
             setGetOperation(response.data);
         });
 
-        axios.get("http://localhost:3001/api/getsrcategory").then((response) => {
+        axios.get("/api/getsrcategory").then((response) => {
             setGetSRCategory(response.data);
         });
     },[]);
@@ -92,7 +92,7 @@ const UAMForm = () => {
         e.preventDefault();
         let srTicketNo = e.target.srTicketNo.value;
         let requested = parseInt(sessionStorage.getItem("sessionid"));
-        axios.post("http://localhost:3001/api/insertsr", {
+        axios.post("/api/insertsr", {
             srTicketNo, srCategory, srSystem, srActivity, 
             srDetails, srSched1, srSched2, srSeverity, srPurpose, requested
         }).then((response) => {
@@ -117,7 +117,7 @@ const UAMForm = () => {
         event.preventDefault();
         let uamTicket = event.target.uamTicket.value;
         let reqby = parseInt(sessionStorage.getItem("sessionid"));
-        axios.post("http://localhost:3001/api/insertuam", {
+        axios.post("/api/insertuam", {
             uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby
         }).then(() => {
            setAddUAM({
@@ -155,31 +155,31 @@ const UAMForm = () => {
                         <div className="modal-body">
                             <form action='' onSubmit={handleAddUAMticket} > 
                                 <div className="row mb-1">
-                                  <label for="" className="col-sm-3 form-label">Ticket No. </label>
+                                  <label  className="col-sm-3 form-label">Ticket No. </label>
                                   <div className="col-sm-9">
                                     <input type="text" className="form-control" name='uamTicket' value={newTicket} id=""disabled/>
                                   </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Requestor: </label>
+                                    <label  className="col-sm-3 form-label">Requestor: </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" name="uamName" value={token.map(i => i.fullname)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Email: </label>
+                                    <label  className="col-sm-3 form-label">Email: </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" name='uamEmail' value={token.map(i => i.email)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Department:</label>
+                                    <label  className="col-sm-3 form-label">Department:</label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" name='uamdepartment' value={token.map(i => i.department)} disabled/>
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">UAM Category:</label>
+                                    <label className="col-sm-3 form-label">UAM Category:</label>
                                     <div className="col-sm-9">
                                         <select className="form-select" name='uamcategory' onChange={handleInputChange} aria-label="Default select">
                                             <option selected disabled>Select category</option>
@@ -194,7 +194,7 @@ const UAMForm = () => {
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">System:</label>
+                                    <label  className="col-sm-3 form-label">System:</label>
                                     <div className="col-sm-9">
                                         <select className="form-select" name='uamsystem' onChange={handleInputChange} aria-label="Default select">
                                             <option selected disabled>Select system</option>
@@ -209,7 +209,7 @@ const UAMForm = () => {
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Operation Rights:</label>
+                                    <label className="col-sm-3 form-label">Operation Rights:</label>
                                     <div className="col-sm-9">
                                         <select className="form-select" name='uamoperation' onChange={handleInputChange} aria-label="Default select">
                                             <option selected disabled>Select rights</option>
@@ -224,19 +224,19 @@ const UAMForm = () => {
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Validity Period:</label>
+                                    <label className="col-sm-3 form-label">Validity Period:</label>
                                     <div className="col-sm-9">
                                         <input id="startDate" className="form-control" name='uamvalidity' onChange={handleInputChange} type="datetime-local" />
                                     </div>
                                 </div>
                                 <div className="row mb-1">
-                                    <label for="" className="col-sm-3 form-label">Request Details:  </label>
+                                    <label className="col-sm-3 form-label">Request Details:  </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" name='uamdetails' onChange={handleInputChange} placeholder="Specify request details"/>
                                     </div>
                                 </div>
                                 <div className="row mb-3">
-                                    <label for="" className="col-sm-3 form-label">Reason for request:  </label>
+                                    <label className="col-sm-3 form-label">Reason for request:  </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="" name='uamreason' onChange={handleInputChange}  placeholder="Specify reason for request" />
                                     </div> 
@@ -364,7 +364,7 @@ const UAMForm = () => {
                     </div>
                 </div>
             </div>
-            </div>  
+        </div>  
     </div>
   )
 };

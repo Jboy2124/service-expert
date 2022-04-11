@@ -1,8 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
 import ForApprovalTicket from '../modals/ForApprovalTicket'
 
 
 const ApproverTicketMng = () => {
+    const [getRole, setGetRole] = useState([]);
+    const [getApproverTicket, setGetApproverTicket] = useState([]);
+    const [getApproverActive, setGetApproverActive] = useState([]);
+    const [passTicket, setPassTicket] = useState("");
+    let userRole = (getRole.map((itms) => { return (itms.role) }));
+    
+
+    useEffect(() => {
+        let id = parseInt(sessionStorage.getItem("sessionid"));
+        axios.get(`/api/get_user_role/${id}`).then((response) => {
+            setGetRole(response.data);
+        });
+    }, []);
+    
+
+
+    useEffect(() => {
+        axios.get(`/api/getapproverticketlist/${userRole}`).then((response) => {
+            setGetApproverTicket(response.data);
+        });
+    },[getRole]);
+
+
+    useEffect(() => {
+        axios.get(`/api/getactiveapproverticketlist/${userRole}`).then((response) => {
+            setGetApproverActive(response.data);
+        });
+    },[getApproverTicket]);
+
+
+    const handleIDEvent = (event, id, ttype) => {
+        event.preventDefault();
+        setPassTicket(id);
+    }
+
+    const reloadEvent = () => {
+        axios.get(`/api/getapproverticketlist/${userRole}`).then((response) => {
+            setGetApproverTicket(response.data);
+        });
+    }
+
   return (
     <div>
         <div id="rightDashboard" className="col-lg-12">
@@ -20,9 +62,6 @@ const ApproverTicketMng = () => {
                     <li className="nav-item" role="presentation">
                         <a className="nav-link" id="activeTicketsApprover-tab" data-bs-toggle="tab" href="#activeTicketsApprover" role="tab" aria-controls="activeTicketsApprover" aria-selected="false">Active Tickets</a>
                     </li>
-                    {/* <li className="nav-item" role="presentation">
-                        <a className="nav-link" id="roles-tab" data-bs-toggle="tab" href="#roles" role="tab" aria-controls="roles" aria-selected="false">Roles</a>
-                    </li>        */}
                 </ul>
             </div>
             <div className="card-body">
@@ -42,15 +81,20 @@ const ApproverTicketMng = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td >03:03:2002 08:08:08 pm</td>
-                                            <th ><a href="#" data-bs-toggle="modal" data-bs-target="#forApprovalTicket">TN-001</a></th>
-                                            <td >Elizabeth Santos</td>
-                                            <td >Engineering</td>
-                                            <td> UAM- New Account Request</td>
-                                            <td> For review and approval </td>
-                                        </tr>
-                                    
+                                        {
+                                            getApproverTicket.map((items) => {
+                                                return(
+                                                    <tr>
+                                                        <td>{items.date_created}</td>
+                                                        <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleIDEvent(e, items.ticket_id)} data-bs-target="#forApprovalTicket">{items.ticket_id}</a></th>
+                                                        <td>{items.fullname}</td>
+                                                        <td>{items.department}</td>
+                                                        <td>{items.request_type}</td>
+                                                        <td>{items.ticket_status}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -84,16 +128,20 @@ const ApproverTicketMng = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                         <tr>
-                                            <td >03:03:2002 08:08:08 pm</td>
-                                            <th ><a href="#" data-bs-toggle="modal" data-bs-target="#ticketDetailsinActiveTab">TN-001</a></th>
-                                            <td >Elizabeth Santos</td>
-                                            <td >Engineering</td>
-                                            <td> UAM- New Account Request</td>
-                                            <td> Approved - For Implementation </td>
-                                        </tr>
-                                        
-                                    
+                                        {
+                                            getApproverActive.map((items) => {
+                                                return (
+                                                    <tr>
+                                                        <td>{items.date_created}</td>
+                                                        <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleIDEvent(e, items.ticket_id)} data-bs-target="#ticketDetailsinActiveTab">{items.ticket_id}</a></th>
+                                                        <td>{items.fullname}</td>
+                                                        <td>{items.department}</td>
+                                                        <td>{items.request_type}</td>
+                                                        <td>{items.ticket_status}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -103,8 +151,7 @@ const ApproverTicketMng = () => {
             </div>
         </div>
         </div>
-        <ForApprovalTicket/>
-    
+        <ForApprovalTicket ticketNo={passTicket} passEventHandler={reloadEvent} />
     </div>
   )
 }

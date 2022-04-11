@@ -45,6 +45,17 @@ const UserManagement = () => {
         });
     };
 
+    const deleteSelectedID = (id) => {
+        // axios.put("http://localhost:3001/api/delete_profile", { id }).then((response) => {
+        //     setTimeout(() => {
+        //         setGetList(response.data);
+        //     }, 500);
+        //     toast.success("Account has been declined", {
+        //         autoClose: 1000
+        //     });
+        // });
+    };
+
     const deleteRole = (id) => {
         axios.put("http://localhost:3001/api/deleteRole", { id }).then((response) => {
             setTimeout(() => {
@@ -97,9 +108,9 @@ const UserManagement = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            getList.map((items) => {
+                                            getList.map((items, index) => {
                                                 return(
-                                                    <tr key={items.approver_id}>
+                                                    <tr key={index}>
                                                        <td>{items.date_created}</td> 
                                                        <td>{items.email}</td> 
                                                        <td>{items.fullname}</td>
@@ -107,8 +118,8 @@ const UserManagement = () => {
                                                        <td>{items.role}</td>
                                                        <td>
                                                             <a href="#" className="" onClick={() => getSelectedID(items.approver_id)}>Approve</a> <br/>
-                                                            <a href="#">Delete</a> 
-                                                     </td>
+                                                            <a href="#" className="" onClick={() => deleteSelectedID(items.approver_id)}>Delete</a> 
+                                                       </td>
                                                     </tr>
                                                 )
                                             })
@@ -147,21 +158,10 @@ const UserManagement = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* <tr>              
-                                            <td>Date approved. fr db </td>
-                                            <td>Email </td>
-                                            <td>Full Name </td>
-                                            <td>Department</td>
-                                            <td>Role</td>
-                                            <td>
-                                                <a href="">Edit</a> <br/>
-                                                <a href="">Delete</a> 
-                                            </td>
-                                        </tr> */}
                                         {
-                                            getConfirmed.map((itm) => {
+                                            getConfirmed.map((itm , index) => {
                                                 return(
-                                                    <tr>
+                                                    <tr key={index}>
                                                         <td>{itm.date_created}</td>
                                                         <td>{itm.email}</td>
                                                         <td>{itm.fullname}</td>
@@ -169,7 +169,7 @@ const UserManagement = () => {
                                                         <td>{itm.role}</td>
                                                         <td>
                                                             <a href="#">Edit</a> <br/>
-                                                            <a href="#">Delete</a> 
+                                                            <a href="#">Disable</a> 
                                                         </td>
                                                     </tr>
                                                 )
@@ -198,9 +198,9 @@ const UserManagement = () => {
                                     <tbody>
                                         {
     
-                                        getRole.map((items) => {
+                                        getRole.map((items, index) => {
                                             return(
-                                                <tr key={items.role_id}>
+                                                <tr key={index}>
                                                     <td> {items.description}</td>
                                                     <td> {items.rights}</td>
                                                     <td> <a href="#" className="" onClick={() => deleteRole(items.role_id)}>Delete</a>  </td>

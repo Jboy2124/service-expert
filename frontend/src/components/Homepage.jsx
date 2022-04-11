@@ -22,28 +22,34 @@ export const Homepage = () => {
         event.preventDefault();
 
         if(chkbox) {
-            axios.post("http://localhost:3001/api/auth_admin", {
+            axios.post("/api/auth_admin", {
                 login_username, login_password
             }).then((response) => {
                 if(response.data.message) {
                     toast.error(response.data.message, {
-                        autoClose : 200
+                        autoClose : 500
                     });
                 } else {
                     navigateToSignUp("/AdminDashBoard", { state: { name: response.data[0].username, role: "" }});
                 }
             });
         }  else {
-            axios.post("http://localhost:3001/api/auth", {
+            axios.post("/api/auth", {
                 login_username, login_password
             }).then((response) => {
                 if(response.data.message) {
                     toast.error(response.data.message, {
-                        autoClose: 200
+                        autoClose: 500
                     }); 
                 } else {
-                    sessionStorage.setItem("sessionid", response.data[0].approver_id);
-                    navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    if (response.data[0].role === 1 ) {
+                        sessionStorage.setItem("sessionid", response.data[0].approver_id);
+                        navigateToSignUp("/UserDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    } else {
+                        sessionStorage.setItem("sessionid", response.data[0].approver_id);
+                        navigateToSignUp("/ApproverDashBoard", { state: { name: response.data[0].first_name,  role: response.data[0].description}});
+                    }
+                   
                 }
             });
         }
@@ -88,7 +94,7 @@ export const Homepage = () => {
                         <div className="col-lg-12 d-flex justify-content-center mb-3 ">
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name='admin_chkbox'  onChange={handleSelectedChk} value="" id="flexCheckDefault"></input>
-                                <label id='form-check-label-admin' className="form-check-label" for="flexCheckDefault">
+                                <label id='form-check-label-admin' className="form-check-label" htmlFor="flexCheckDefault">
                                     Service Expert Admin
                                 </label>
                             </div><br/>

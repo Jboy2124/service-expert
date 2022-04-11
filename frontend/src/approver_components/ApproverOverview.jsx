@@ -1,6 +1,15 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 
 const ApproverOverview = () => {
+   const [getTotal, setGetTotal] = useState([]);
+
+   useEffect(() => {
+       const id = parseInt(sessionStorage.getItem("sessionid"));
+        axios.get(`http://localhost:3001/api/gettotalticketapprover/${id}`).then((response) => {
+            setGetTotal(response.data);
+        });
+   }, []);
    
   return (
     <div >
@@ -12,29 +21,29 @@ const ApproverOverview = () => {
             </div>
             <div className="row m-3 ">
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-danger mb-3" >
-                    <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                        <div class="card-body bg-light">
-                            <h1 class="card-title text-center  text-danger">5</h1>
-                            <p class="card-text text-center  text-danger">Tickets for approval</p>
+                <div className="card text-white mb-3  border-radius" >
+                    <div className="card-header bg-danger"> <i className="bi bi-ticket"></i></div>
+                        <div className="card-body bg-light border-radius-body">
+                            <h1 className="card-title text-center  text-danger">{ getTotal.map((item) => { return item.ForApproval })}</h1>
+                            <p className="card-text text-center  text-danger">Tickets for approval</p>
                         </div>
                     </div>
                 </div>
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-secondary mb-3" >
-                    <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                        <div class="card-body bg-light">
-                            <h1 class="card-title text-center text-secondary">15</h1>
-                            <p class="card-text text-center  text-secondary">Active Tickets</p>
+                <div className="card text-white border-radius mb-3" >
+                    <div className="card-header bg-secondary"> <i className="bi bi-ticket"></i></div>
+                        <div className="card-body bg-light border-radius-body">
+                            <h1 className="card-title text-center text-secondary">{ getTotal.map((item) => { return item.Approved }) }</h1>
+                            <p className="card-text text-center  text-secondary">Active Tickets</p>
                         </div>
                     </div>
                 </div> 
                 <div className="col-lg-4 col-sm-6 overflow">
-                <div class="card text-white bg-success mb-3" >
-                    <div class="card-header"> <i class="bi bi-ticket"></i></div>
-                        <div class="card-body bg-light">
-                            <h1 class="card-title text-center text-success">20</h1>
-                            <p class="card-text text-center text-success">Closed Tickets </p>
+                <div className="card text-white border-radius mb-3" >
+                    <div className="card-header bg-success"> <i className="bi bi-ticket"></i></div>
+                        <div className="card-body bg-light border-radius-body">
+                            <h1 className="card-title text-center text-success">{ getTotal.map((item) => { return item.Closed }) }</h1>
+                            <p className="card-text text-center text-success">Closed Tickets </p>
                         </div>
                     </div>
                 </div>

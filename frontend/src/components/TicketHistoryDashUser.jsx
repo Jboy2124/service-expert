@@ -24,13 +24,6 @@ const TicketHistoryDashUser = () => {
                     </div>  
             </div>
             <div className="card">
-                <div className="card-header">
-                    <ul className="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-                        <li className="nav-item" role="presentation">
-                            <a className="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Download</a>
-                        </li>                        
-                    </ul>
-                </div>
                 <div className="card-body">
                     <div className="tab-content" id="myTabContent">
                         <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">

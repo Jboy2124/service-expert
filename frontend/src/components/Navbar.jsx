@@ -1,6 +1,7 @@
 import React, { useState, useEffect }from 'react';
 import "../css/navbar.css"
 import { useNavigate } from 'react-router-dom'
+import logo from '../images/Untitled2.png'
 
 const Navbar = (props) => {
   const date = new Date().toLocaleDateString();
@@ -19,23 +20,23 @@ const Navbar = (props) => {
   
   return (
     <div>
-       <nav id="navBarDashLogo" class="navbar navbar-expand-lg navbar-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                   Service Expert
-                </a>
-                <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon "></span>
+       <nav id="navBarDashLogo" className="navbar navbar-expand-lg navbar-dark">
+            <div className="container-fluid">
+                <img id='navBarLogo' className="navbar-brand" src={logo}/>
+                  
+                
+                <button className="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                  <span className="navbar-toggler-icon "></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <ul class="nav justify-content-end flex-grow-1">
-                          <li class="list-inline-item">{time}</li>
-                          <li class="list-inline-item">{date}</li>
-                          <li class="list-inline-item"><i class="bi bi-bell"></i></li>
-                          {/* <li class="list-inline-item"><i class="bi bi-person-circle"></i> Jufel</li> */}
-                          <li class="list-inline-item"><i class="bi bi-person-circle"></i> {user_name} {user_role}</li>
-                          {/* <li class="list-inline-item">{roles}</li> */}
-                          <li class="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {navigateHomepage("/")}}>LOGOUT</a></li>
+                <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul className="nav justify-content-end flex-grow-1">
+                          <li className="list-inline-item">{time}</li>
+                          <li className="list-inline-item">{date}</li>
+                          <li className="list-inline-item"><i className="bi bi-bell"></i></li>
+                          {/* <li className="list-inline-item"><i className="bi bi-person-circle"></i> Jufel</li> */}
+                          <li className="list-inline-item"><i className="bi bi-person-circle"></i> {user_name} {user_role}</li>
+                          {/* <li className="list-inline-item">{roles}</li> */}
+                          <li className="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {navigateHomepage("/")}}>LOGOUT</a></li>
                       </ul>   
                 </div>
             </div>
