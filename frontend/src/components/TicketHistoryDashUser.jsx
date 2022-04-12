@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import TicketDetailsModal from '../modals/TicketDetailsModal'
+import axios from 'axios';
 
 
 const TicketHistoryDashUser = () => {
+    const [history, setHistory] = useState([]);
+
+
+    useEffect(() => {
+        const id = parseInt(sessionStorage.getItem("sessionid"));
+        axios.get(`/api/requestor_ticket_history/${id}`).then((response) => {
+            setHistory(response.data);
+        });
+    }, []);
+
+
+
+  
+
+
   return (
     <div >
         <div id="rightDashboard" className="col-lg-12 col-sm-12">
@@ -39,12 +55,18 @@ const TicketHistoryDashUser = () => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <th scope="row"> <a href="#" data-bs-toggle="modal" data-bs-target="#ticketDetails">TN-001</a></th>
-                                            <td>03/22/2022 08:00:00</td>
-                                            <td>UAM - New User Account Creation</td>
-                                            <td>Closed</td>
-                                        </tr>
+                                        {
+                                            history.map((items) => {
+                                                return (
+                                                    <tr>
+                                                        <th scope="row"> <a href="#" data-bs-toggle="modal" data-bs-target="#ticketDetails">{items.ticket_id}</a></th>
+                                                        <td>{items.date_created}</td>
+                                                        <td>{items.request_type}</td>
+                                                        <td>{items.ticket_status}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
                                         </tbody>
                                     </table>
                                 </div>

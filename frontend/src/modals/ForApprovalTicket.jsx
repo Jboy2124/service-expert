@@ -7,7 +7,6 @@ const ForApprovalTicket = (props) => {
     const [addStatus, setStatus] = useState([]);
     const { ticketRemarks, ticketReason } = addStatus;
     const [getForApproval, setGetForApproval] = useState([]);
-    const [hideShowBtn, setHideSideBtn] = useState(true);
     let ticketType = getForApproval.map(i => { return ( i.ticket_type) });
     let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Ticket Implemented" : "Implement Activity";
 

@@ -2,13 +2,24 @@ import React, { useState, useEffect }from 'react';
 import "../css/navbar.css"
 import { useNavigate } from 'react-router-dom'
 import logo from '../images/Untitled2.png'
+import axios from 'axios';
 
 const Navbar = (props) => {
+  const [badgeCount, setBadgeCount] = useState([]);
   const date = new Date().toLocaleDateString();
   const time = new Date().toLocaleTimeString();
   const [getTime, setGetTime] = useState(time);
   const navigateHomepage = useNavigate();
-  const roles = " "
+  
+
+
+  useEffect(() => {
+    const id = parseInt(sessionStorage.getItem("sessionid"));
+    axios.get(`/api/badge_new_total/${id}`).then((response) => {
+      setBadgeCount(response.data);
+    });
+  },[]);
+  let roles = badgeCount.map((items) => { return ( items.userRole) });
 
   useEffect(() => {
     setInterval(() => setGetTime(new Date().toLocaleTimeString()), 1000);
@@ -32,7 +43,13 @@ const Navbar = (props) => {
                     <ul className="nav justify-content-end flex-grow-1">
                           <li className="list-inline-item">{time}</li>
                           <li className="list-inline-item">{date}</li>
-                          <li className="list-inline-item"><i className="bi bi-bell"></i></li>
+                          <li className="list-inline-item"><i id='nav-bell' className="bi bi-bell position-relative">
+                          <span style={{ visibility: (roles == 2) ? "visible" : "hidden" }} id='nav-badge' className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                              { badgeCount.map((i) => { return (i.ticketCount) })}
+                              {/* <span className="visually-hidden">unread messages</span> */}
+                            </span>
+                          </i>                     
+                          </li>
                           {/* <li className="list-inline-item"><i className="bi bi-person-circle"></i> Jufel</li> */}
                           <li className="list-inline-item"><i className="bi bi-person-circle"></i> {user_name} {user_role}</li>
                           {/* <li className="list-inline-item">{roles}</li> */}

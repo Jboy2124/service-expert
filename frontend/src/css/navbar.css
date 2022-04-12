@@ -2,6 +2,16 @@
     font-family: "Prompt", sans-serif;
 }
 
+#nav-bell {
+    font-size: 16px;
+}
+
+#nav-badge {
+    font-size: 8px;
+    font-weight: normal;
+    
+}
+
 #navBarLogo{
     height: 50px;
     width: 180px; 
