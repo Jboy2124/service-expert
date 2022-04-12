@@ -6,7 +6,7 @@ const cors = require("cors");
 // const res = require("express/lib/response");
 const app = express();
 const server_port = 3001;
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 
 const db = mysql.createConnection({
     host: process.env.DATABASE_HOSTNAME,
@@ -316,27 +316,18 @@ app.get("/api/user_profile/:id", (req, res) => {
 
 app.get("/api/ticketno/:type", (req, res) => {
     const type = req.params.type;
-    const queryString = "SELECT MAX(IFNULL(t.ticket_id,0)) as ticket_id " +
-                        "FROM type_uam_ticket t " +
-                        "WHERE t.ticket_type = ?";
+    const queryString = `SELECT MAX(IFNULL(x.ticket_id,0)) as ticket_id FROM
+                        (SELECT t.ticket_id, t.ticket_type
+                        FROM type_uam_ticket t
+                        UNION
+                        SELECT st.ticket_id, st.ticket_type
+                        FROM type_sr_ticket st) x
+                        WHERE x.ticket_type = ? `;
     db.query(queryString, type, (err, result) => {
         if(err) {
             console.log("Error: ", err.message);
         } else {
             res.send(result);
-        }
-    });
-});
-
-
-app.get("/api/srticketno/:type", (request, response) => {
-    let id = request.params.type;
-    const queryString = "SELECT MAX(IFNULL(ticket_id, 0)) as ticket_id FROM type_sr_ticket WHERE ticket_type = ?";
-    db.query(queryString, id, (error, result) => {
-        if(error) {
-            console.log("Error: " + error.message);
-        } else {
-            response.send(result);
         }
     });
 });
@@ -418,7 +409,14 @@ app.post("/api/insertsr", (request, response) => {
         if(error) {
             console.log("Error", error.message);
         } else {
-            response.send({ message: "Ticket successfully added" });
+            const getLatest = "INSERT INTO ticket_status_history(ticket_status, handled_by, reasons, remarks, ticket_id, ticket_type) VALUES(?, ?, ?, ?, ?, ?)";
+            db.query(getLatest, ["For Approval", requested, srPurpose, srDetails, srTicketNo, "SR"], (err,result) => {
+                if(err) {
+                    console.log("Error: ", err.message);
+                } else {
+                    response.send({message: "Ticket successfully added"});
+                }
+            });
         }
     })
 });
@@ -522,7 +520,91 @@ app.get("/api/getactivesrtickets/:id", (request, response) => {
     });
 
 
+app.get("/api/total_requestor_ticket/:id", (req,res) => {
+    const id = req.params.id;
+    const query = `SELECT SUM(IFNULL(i.ActiveTicket,0)) as ActiveTicket,
+                    SUM(IFNULL(i.ClosedTicket,0)) as ClosedTicket,
+                    (SUM(IFNULL(i.ActiveTicket,0)) + SUM(IFNULL(i.ClosedTicket,0))) as TotalTicket
+                    FROM
+                    (SELECT x.ticket_id, x.ticket_status, 
+                    IF(x.ticket_status != 'Implemented', 1, 0) as ActiveTicket,
+                    IF(x.ticket_status = 'Implemented', 1, 0) as ClosedTicket,
+                    x.requested_by
+                    FROM
+                    (SELECT i.ticket_id, i.ticket_status, i.requested_by
+                    FROM type_uam_ticket i
+                    UNION
+                    SELECT t.ticket_id, t.ticket_status, t.requested_by
+                    FROM type_sr_ticket t) x
+                    WHERE x.requested_by = ?) i`;
+    db.query(query, id, (err, result) => {
+        if(err) {
+            console.log("Error: " + err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+app.get("/api/requestor_ticket_history/:id", (request, response) => {
+    const id = request.params.id;
+    const queryString = `select  *
+                        from
+                        (select t.ticket_id, t.date_created, t.ticket_type, CONCAT(t.ticket_type,' - ',c.category_name) as request_type,
+                        t.ticket_status, t.requested_by,  CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as requestor_name, p.email, p.department,
+                        c.category_name, ts.system_name, op.operation_name, t.uam_validity, t.request_details, t.request_reason, 
+                        '' as first_approver, '' as second_approver, '' as implementor, '' as attached_logs, '' as Remarks
+                        from type_uam_ticket t
+                        left join profile p on t.requested_by = p.approver_id
+                        left join type_uam_category c on t.uam_category = c.category_id
+                        left join type_uam_operation op on t.uam_operation = op.operation_id
+                        left join ticket_system ts on t.uam_system = ts.system_id
+                        UNION
+                        select t.ticket_id, t.date_created, t.ticket_type, CONCAT(t.ticket_type,' - ',c.category_name) as request_type,
+                        t.ticket_status, t.requested_by, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as requested_name, p.email, p.department,
+                        c.category_name, st.system_name, '' as operation_name, '' as t_validity, CONCAT(t.activity_name,' - ',t.activity_details) as request_details, t.purpose,
+                        '' as first_approver, '' as second_approver, '' as implementor, '' as attached_logs, '' as Remarks
+                        from type_sr_ticket t
+                        left join profile p on t.requested_by = p.approver_id
+                        left join type_sr_category c on t.sr_category = c.category_id
+                        left join ticket_system st on t.sr_system = st.system_id) x
+                        where x.requested_by = ?
+                        and x.ticket_status = 'Implemented'`;
+    db.query(queryString, id, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            response.send(result);
+        }
+    });
+});
+
+
 //Approver Side
+app.get("/api/badge_new_total/:id", (req, res) => {
+    const id = req.params.id;
+    const queryString = `select COUNT(x.ticket_id) as ticketCount,
+                        (select p.role from profile p where p.approver_id = ? ) as userRole
+                        from
+                        (select t.ticket_id
+                        from type_uam_ticket t
+                        where t.ticket_status = 'For Approval'
+                        UNION
+                        select t.ticket_id
+                        from type_sr_ticket t 
+                        where t.ticket_status = 'For Approval') x`
+    db.query(queryString, id, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
+
 app.get("/api/gettotalticketapprover/:id", (req, response) => {
     const id = req.params.id;
     const queryString = "SELECT SUM(i.ForApproval) as ForApproval, " +
@@ -550,17 +632,17 @@ app.get("/api/gettotalticketapprover/:id", (req, response) => {
 app.get("/api/getapproverticketlist/:role", (request, response) => {
     const userRole = parseInt(request.params.role);
     // console.log("User Role: " + userRole);
-    let stringFilter;
+    let filter1 = "";
 
     switch(userRole) {
         case 2:
-            stringFilter = 'For Approval';
+            filter1 = 'For Approval';
             break;
         case 3: 
-            stringFilter = 'For IS Approval';
+            filter1 = 'For IS Approval';
             break;
         case 4:
-            stringFilter = 'For Implementation';
+            filter1 = 'For Implementation';
             break;
     }
     const queryString = "SELECT * FROM "+
@@ -582,7 +664,7 @@ app.get("/api/getapproverticketlist/:role", (request, response) => {
                         "LEFT JOIN type_sr_category src ON st.sr_category = src.category_id "+
                         "LEFT JOIN ticket_system srs ON st.sr_system = srs.system_id) x "+
                         "WHERE x.ticket_status IN ( ? )";
-    db.query(queryString, stringFilter, (err, result) => {
+    db.query(queryString, [filter1], (err, result) => {
         if(err) {
             console.log("Error: ", err.message);
         } else {
@@ -595,41 +677,41 @@ app.get("/api/getapproverticketlist/:role", (request, response) => {
 
 app.get("/api/getactiveapproverticketlist/:role", (request, response) => {
     const userRole = parseInt(request.params.role);
-    let stringFilter;
+    let filter2="";
 
     switch(userRole) {
         case 2:
-            stringFilter = 'Approved';
+            filter2 = 'Approved';
             break;
         case 3: 
-            stringFilter = 'IS Approved';
+            filter2 = 'IS Approved';
             break;
         case 4:
-            stringFilter = 'Implementing Activity','Approved for Implementation';
+            filter2 = ['Approved for Implementation','Implementing Ticket'];
             break;
         default:
             break;
     }
-    const queryString = "SELECT * FROM "+
-                        "(SELECT ut.date_created, ut.ticket_id, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as fullname, "+
-                        "p.email, p.department, CONCAT(ut.ticket_type,' - ',uc.category_name) as request_type, "+
-                        "ut.ticket_status, us.system_name, uo.operation_name, ut.uam_validity as ticket_validity, ut.request_details, ut.request_reason "+
-                        "FROM type_uam_ticket ut "+
-                        "LEFT JOIN profile p ON ut.requested_by = p.approver_id "+
-                        "LEFT JOIN type_uam_category uc ON ut.uam_category = uc.category_id "+
-                        "LEFT JOIN ticket_system us ON ut.uam_system = us.system_id "+
-                        "LEFT JOIN type_uam_operation uo ON ut.uam_operation = uo.operation_id "+
-                        "UNION "+
-                        "SELECT st.date_created, st.ticket_id, CONCAT(IFNULL(pr.first_name,''),' ',IFNULL(pr.last_name,'')) as fullname, "+
-                        "pr.email, pr.department, CONCAT(st.ticket_type,' - ',src.category_name) as request_type, st.ticket_status, "+
-                        "srs.system_name, '' as operation_name, '' as ticket_validity, "+
-                        "CONCAT(st.activity_name,'-',st.activity_details,' (',st.severity,')') as request_details, st.purpose as request_reason "+
-                        "FROM type_sr_ticket st "+
-                        "LEFT JOIN profile pr ON st.requested_by = pr.approver_id "+
-                        "LEFT JOIN type_sr_category src ON st.sr_category = src.category_id "+
-                        "LEFT JOIN ticket_system srs ON st.sr_system = srs.system_id) x "+
-                        "WHERE x.ticket_status IN (?) ";
-    db.query(queryString, stringFilter, (err, result) => {
+    const queryString = `SELECT * FROM 
+                        (SELECT ut.date_created, ut.ticket_id, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as fullname, 
+                        p.email, p.department, CONCAT(ut.ticket_type,' - ',uc.category_name) as request_type, 
+                        ut.ticket_status, us.system_name, uo.operation_name, ut.uam_validity as ticket_validity, ut.request_details, ut.request_reason 
+                        FROM type_uam_ticket ut 
+                        LEFT JOIN profile p ON ut.requested_by = p.approver_id 
+                        LEFT JOIN type_uam_category uc ON ut.uam_category = uc.category_id 
+                        LEFT JOIN ticket_system us ON ut.uam_system = us.system_id 
+                        LEFT JOIN type_uam_operation uo ON ut.uam_operation = uo.operation_id 
+                        UNION 
+                        SELECT st.date_created, st.ticket_id, CONCAT(IFNULL(pr.first_name,''),' ',IFNULL(pr.last_name,'')) as fullname, 
+                        pr.email, pr.department, CONCAT(st.ticket_type,' - ',src.category_name) as request_type, st.ticket_status, 
+                        srs.system_name, '' as operation_name, '' as ticket_validity, 
+                        CONCAT(st.activity_name,'-',st.activity_details,' (',st.severity,')') as request_details, st.purpose as request_reason 
+                        FROM type_sr_ticket st 
+                        LEFT JOIN profile pr ON st.requested_by = pr.approver_id 
+                        LEFT JOIN type_sr_category src ON st.sr_category = src.category_id 
+                        LEFT JOIN ticket_system srs ON st.sr_system = srs.system_id) x 
+                        WHERE x.ticket_status IN (?)`;
+    db.query(queryString, [filter2], (err, result) => {
         if(err) {
             console.log("Error: ", err.message);
         } else {

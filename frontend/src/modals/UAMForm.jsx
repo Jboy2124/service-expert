@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import swal from 'sweetalert';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 
 
 const initialValue = {
-    uamcategory:"", 
-    uamsystem:"", 
-    uamoperation:"", 
+    uamcategory: 0, 
+    uamsystem: 0, 
+    uamoperation: 0, 
     uamvalidity:"", 
     uamdetails:"", 
     uamreason:""
 }
 
-const UAMForm = () => {
-    const navigate = useNavigate();
+const UAMForm = (props) => {
+    const [displayTicket, setDisplayTicket] = useState("");
+    const [getTicketNo, setGetTicketNo] = useState([]);
     const [token, setToken] = useState([{}]);
-    const [getTicketNo, setGetTicketNo] = useState([{}]);
-    const [getSRTicketNo, setGetSRTicketNo] = useState([{}]);
+    const [getTicketID, setTicketID] = useState(props.ticketID);
     const [getCategory, setGetCategory] = useState([{}]);
     const [getSystem, setGetSystem] = useState([{}]);
     const [getSRCategory, setGetSRCategory] = useState([{}]);
     const [getOperation, setGetOperation] = useState([{}]);
     const [addUAM, setAddUAM] = useState(initialValue);
     const [addSR, setAddSR] = useState({
-        srCategory: "", srSystem:"", srActivity:"", 
+        srCategory: 0, srSystem: 0, srActivity:"", 
         srDetails:"", srSched1:"", srSched2: "", srSeverity: "", srPurpose: ""
     });
     const { srCategory, srSystem, srActivity, srDetails, srSched1, srSched2, srSeverity, srPurpose} = addSR;
@@ -34,33 +33,25 @@ const UAMForm = () => {
     let newTicket ="";
     let newSRTicket ="";
 
+
   
+    useEffect(() => {
+        axios.get(`/api/ticketno/${props.ticketType}`).then((response) => {
+            setGetTicketNo(response.data);
+        });
+
+    }, [props.ticketType, addUAM, addSR]);
+
+
 
     useEffect(() => {
         const id = parseInt(sessionStorage.getItem("sessionid"));
+
         axios.get(`/api/user_profile/${id}`,).then((response) => {
             setToken(response.data);
         });
-    },[]);
-    
-
-    useEffect(() => {
-        let type = "UAM";
-        axios.get(`/api/ticketno/${type}`).then((response) => {
-            setGetTicketNo(response.data);
-        });
-    }, []);
-
-    useEffect(() => {
-        let type = "SR";
-        axios.get(`/api/srticketno/${type}`).then((response) => {
-            setGetSRTicketNo(response.data);
-        });
-    }, []);
 
 
-
-    useEffect(() => {
         axios.get("/api/category").then((response) => {
             setGetCategory(response.data);
         });
@@ -76,19 +67,49 @@ const UAMForm = () => {
         axios.get("/api/getsrcategory").then((response) => {
             setGetSRCategory(response.data);
         });
+
     },[]);
+    
 
 
-    let sr = getSRTicketNo.map(i => { return (i.ticket_id) });
-    console.log(sr);
-    if(sr != 0) {
-        const lastTicketSuffix = parseInt(sr.toString().slice(-3));
-        newSRTicket = "SR-"+ (lastTicketSuffix + 1).toString().padStart(3, '0');
+    let getNo = "";
+    getNo = getTicketNo.map((items) => {return(items.ticket_id)});
+    if(getNo != 0) {
+        const lastTicketSuffix = parseInt(getNo.toString().slice(-3));
+        if(props.ticketType == "UAM") {
+            newTicket = ("UAM-"+ (lastTicketSuffix + 1).toString().padStart(3, '0'));
+        } else {
+            newTicket = ("SR-"+ (lastTicketSuffix + 1).toString().padStart(3, '0'));
+        }
     } else {
-        newSRTicket = "SR-001";
+        if(props.ticketType == "UAM") {
+            newTicket = ("UAM-001");
+        } else {
+            newTicket = ("SR-001");
+        }
     }
 
-    const handleAddSRTicket = (e) => {
+
+
+    const handleAddUAMticket = (event) => {
+        event.preventDefault();
+        let uamTicket = event.target.uamTicket.value;
+        let reqby = parseInt(sessionStorage.getItem("sessionid"));
+        axios.post("/api/insertuam", {
+            uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby
+        }).then(() => {
+            props.handleReloadList();
+           setAddUAM({
+                uamTicket:"", uamcategory: 0, uamsystem: 0, 
+                uamoperation: 0, uamvalidity:"", uamdetails:"", 
+                uamreason:"", reqby: ""
+           });
+        });
+        swal("Success", "Ticket successfully added", "success");
+    }
+
+
+        const handleAddSRTicket = (e) => {
         e.preventDefault();
         let srTicketNo = e.target.srTicketNo.value;
         let requested = parseInt(sessionStorage.getItem("sessionid"));
@@ -96,6 +117,7 @@ const UAMForm = () => {
             srTicketNo, srCategory, srSystem, srActivity, 
             srDetails, srSched1, srSched2, srSeverity, srPurpose, requested
         }).then((response) => {
+            props.handleReloadList();
             setAddSR({
                 srCategory: "", srSystem:"", srActivity:"", 
                 srDetails:"", srSched1:"", srSched2: "", srSeverity: "", srPurpose: ""
@@ -105,30 +127,6 @@ const UAMForm = () => {
     }
 
 
-    let getNo = getTicketNo.map((items) => {return(items.ticket_id)});
-    if(getNo != 0) {
-        const lastTicketSuffix = parseInt(getNo.toString().slice(-3));
-        newTicket = "UAM-"+ (lastTicketSuffix + 1).toString().padStart(3, '0');
-    } else {
-        newTicket = "UAM-001";
-    }
-
-    const handleAddUAMticket = (event) => {
-        event.preventDefault();
-        let uamTicket = event.target.uamTicket.value;
-        let reqby = parseInt(sessionStorage.getItem("sessionid"));
-        axios.post("/api/insertuam", {
-            uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby
-        }).then(() => {
-           setAddUAM({
-                uamTicket:"", uamcategory:"", uamsystem:"", 
-                uamoperation:"", uamvalidity:"", uamdetails:"", 
-                uamreason:"", reqby: ""
-           });
-        });
-        // toast.success("Ticket successfully added");
-        swal("Success", "Ticket successfully added", "success");
-    }
 
     const handleInputChange = (event) => {
         event.preventDefault();
@@ -146,7 +144,7 @@ const UAMForm = () => {
     return (
     <div >  
             <div className="modal fade" id="staticBackdropUAM" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="staticBackdropLabel">User Access Management</h5>
@@ -232,29 +230,29 @@ const UAMForm = () => {
                                 <div className="row mb-1">
                                     <label className="col-sm-3 form-label">Request Details:  </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="" name='uamdetails' onChange={handleInputChange} placeholder="Specify request details"/>
+                                      <input type="text" className="form-control" id="" name='uamdetails' onChange={handleInputChange} placeholder="Specify request details" required/>
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <label className="col-sm-3 form-label">Reason for request:  </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="" name='uamreason' onChange={handleInputChange}  placeholder="Specify reason for request" />
+                                      <input type="text" className="form-control" id="" name='uamreason' onChange={handleInputChange}  placeholder="Specify reason for request" required />
                                     </div> 
                                 </div>                           
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" className="btn buttonStyleGlobal"  >Submit Ticket</button>
+                                    <button type="submit" className="btn buttonStyleGlobal" data-bs-dismiss="modal">Submit Ticket</button>
                                 </div>
                               </form>
                         </div>
-                    </div>
+                    </div>9+7
                 </div>
             </div>
 
 
 
             <div className="modal fade" id="staticBackdropSR" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div className="modal-dialog">
+            <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id="staticBackdropLabel">Service Request</h5>
@@ -265,7 +263,7 @@ const UAMForm = () => {
                             <div className="row mb-1">
                               <label for="" className="col-sm-3 form-label">Ticket No. </label>
                               <div className="col-sm-9">
-                                <input type="text" className="form-control" name='srTicketNo' value={newSRTicket} id=""disabled />
+                                <input type="text" className="form-control" name='srTicketNo' value={newTicket} id=""disabled />
                               </div>
                             </div>
                             <div className="row mb-1">
@@ -353,12 +351,12 @@ const UAMForm = () => {
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Purpose:  </label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" name='srPurpose' onChange={handleInputSRChange} id=""placeholder="Specify purpose of activity"/>
+                                  <input type="text" className="form-control" name='srPurpose' onChange={handleInputSRChange} id=""placeholder="Specify purpose of activity" required/>
                                 </div>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" className="btn buttonStyleGlobal">Submit Ticket</button>
+                                <button type="submit" className="btn buttonStyleGlobal" data-bs-dismiss="modal">Submit Ticket</button>
                             </div>        
                         </form>
                     </div>
