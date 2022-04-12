@@ -15,7 +15,7 @@ const roleValues = {
 const AddRoleForm = () => {
     const [addRole , setAddRole ] = useState(roleValues);
     const { role, rights } = addRole;
-    // const navigate = useNavigate();
+    let form = document.getElementById("addRoleForm")
   
     
     const addNewRoleValue = (e) => {
@@ -30,6 +30,8 @@ const AddRoleForm = () => {
         toast.success("New Role has been added", {
             autoClose: 1000
         })
+        
+        form.reset()
     }
     const addNewRoleValueChange = (event) => {
         event.preventDefault();
@@ -48,22 +50,22 @@ const AddRoleForm = () => {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
-                        <form onSubmit={addNewRoleValue}> 
+                        <form id='addRoleForm' onSubmit={addNewRoleValue}> 
                             <div className="row mb-1">
                                 <label className="col-sm-3 form-label">Role </label>
                                 <div className="col-sm-9">
-                                <input type="text" className="form-control" name='role'  onChange={addNewRoleValueChange}/>
+                                <input type="text" className="form-control" name='role'  onChange={addNewRoleValueChange} required/>
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label className="col-sm-3 form-label" >Rights </label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control" name="rights" onChange={addNewRoleValueChange} />
+                                    <input type="text" className="form-control" name="rights" onChange={addNewRoleValueChange} required/>
                                 </div>
                             </div>
                             <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" className="btn buttonStyleGlobal " data-bs-dismiss="modal">Add new role</button>
+                                    <button type="submit" className="btn buttonStyleGlobal "  >Add new role</button>
                             </div>
                         </form>
                     </div>

@@ -147,7 +147,7 @@ app.post("/api/auth", (req, res) => {
                }
                else {
                    if(res1[0].status == "Unconfirmed") {
-                       res.send("User has no confirmation" );
+                       res.send({message: "Your account has NOT been confirmed yet."});
                    }
                    else {
                        res.send(res1)
