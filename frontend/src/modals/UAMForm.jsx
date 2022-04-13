@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';
-
+// import emailjs from '@emailjs/browser';
 
 
 const initialValue = {
@@ -15,7 +15,8 @@ const initialValue = {
 }
 
 const UAMForm = (props) => {
-    const [displayTicket, setDisplayTicket] = useState("");
+    // const form = useRef();
+    const [displayTicket, setDisplayTicket] = useState(""); 
     const [getTicketNo, setGetTicketNo] = useState([]);
     const [token, setToken] = useState([{}]);
     const [getTicketID, setTicketID] = useState(props.ticketID);
@@ -99,6 +100,14 @@ const UAMForm = (props) => {
             uamTicket, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, reqby
         }).then(() => {
             props.handleReloadList();
+            // emailjs.sendForm('serviceXpert', 'template_i10gjw7', form.current, 'NPopNT28eeac99Wq0')
+            // .then((result) => {
+            //     console.log(result.text);
+            // }, (error) => {
+            //     console.log(error.text);
+            // });
+
+
            setAddUAM({
                 uamTicket:"", uamcategory: 0, uamsystem: 0, 
                 uamoperation: 0, uamvalidity:"", uamdetails:"", 
@@ -125,6 +134,8 @@ const UAMForm = (props) => {
             swal("Success", response.data.message, "success");
         }); 
     }
+
+
 
 
 
@@ -155,7 +166,7 @@ const UAMForm = (props) => {
                                 <div className="row mb-1">
                                   <label  className="col-sm-3 form-label">Ticket No. </label>
                                   <div className="col-sm-9">
-                                    <input type="text" className="form-control" name='uamTicket' value={newTicket} id=""disabled/>
+                                    <input type="text" className="form-control" name='uamTicket' onChange={handleInputChange} value={newTicket} id=""disabled/>
                                   </div>
                                 </div>
                                 <div className="row mb-1">

@@ -34,7 +34,7 @@ const ApproverTicketMng = () => {
     },[getApproverTicket]);
 
 
-    const handleIDEvent = (event, id, ttype) => {
+    const handleIDEvent = (event, id) => {
         event.preventDefault();
         setPassTicket(id);
     }
