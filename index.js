@@ -652,7 +652,7 @@ app.post("/api/insertuam", (req, res) => {
                             if(err) {
                                 console.log(err.message);
                             } else {
-                                // sendEmailToApprover(appList, result, "UAM");
+                                sendEmailToApprover(appList, result, "UAM");
                             }
                         });
 
@@ -706,7 +706,7 @@ app.post("/api/insertsr", (request, response) => {
                         if(err) {
                             console.log(err.message);
                         } else {
-                            // sendEmailToApprover(appList, result, "SR");
+                            sendEmailToApprover(appList, result, "SR");
                         }
                     });
                 }

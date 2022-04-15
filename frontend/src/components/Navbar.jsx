@@ -47,7 +47,6 @@ const Navbar = (props) => {
                           <li className="list-inline-item"><i id='nav-bell' className="bi bi-bell position-relative">
                           <span style={{ visibility: (roles == 2 && count >= 1) ? "visible" : "hidden" }} id='nav-badge' className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                               {count}
-                              {/* <span className="visually-hidden">unread messages</span> */}
                             </span>
                           </i>                     
                           </li>
