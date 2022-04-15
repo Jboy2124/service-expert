@@ -3,14 +3,12 @@ import axios from 'axios';
 import ActiveTicketModal from '../modals/ActiveTicketModal'
 
 const ActiveTicketDashUser = () => {
-    let ticketType = "";
-    let ticketId = "";
     const [getActiveUAM, setGetActiveUAM] = useState([{}]);
     const [getActiveSR, setGetActiveSR] = useState([{}]);
+    const [passID, setPassID] = useState("");
 
     useEffect(() => {
         let id = parseInt(sessionStorage.getItem("sessionid"));
-        // console.log(id);
         axios.get(`/api/getactiveuamtickets/${id}`).then((response) => {
             setGetActiveUAM(response.data);
         });
@@ -20,10 +18,9 @@ const ActiveTicketDashUser = () => {
         });
     }, []);
 
-    const handleShowModal =(e, ttype, id) => {
+    const handleShowModal =(e, id) => {
         e.preventDefault();
-        ticketType = ttype;
-        ticketId = id;
+        setPassID(id);
     }
 
   return (
@@ -69,7 +66,7 @@ const ActiveTicketDashUser = () => {
                                                 getActiveUAM.map((items)=>{
                                                     return(
                                                         <tr>
-                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, "UAM", (items.ticket_id))} data-bs-target="#activeUAMTicketModal">{items.ticket_id}</a></th>
+                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (items.ticket_id))} data-bs-target="#activeUAMTicketModal">{items.ticket_id}</a></th>
                                                             <td>{items.date_created}</td>
                                                             <td>{items.category_name}</td>
                                                             <td>{items.ticket_status}</td>
@@ -99,7 +96,7 @@ const ActiveTicketDashUser = () => {
                                                 getActiveSR.map((i)=>{
                                                     return(
                                                         <tr>
-                                                            <th ><a href="#" data-bs-toggle="modal" data-bs-target="#activeSRTicketModal">{i.ticket_id}</a></th>
+                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (i.ticket_id))} data-bs-target="#activeSRTicketModal">{i.ticket_id}</a></th>
                                                             <td>{i.date_created}</td>
                                                             <td>{i.category_name}</td>
                                                             <td>{i.ticket_status}</td>
@@ -118,7 +115,7 @@ const ActiveTicketDashUser = () => {
                 </div>
         
         </div> 
-        <ActiveTicketModal ticketType={ticketType} ticketNo={ticketId} />
+        <ActiveTicketModal ticketNo={passID} />
     </div>
   )
 }

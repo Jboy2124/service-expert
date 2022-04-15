@@ -4,16 +4,26 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 
-const TicketDetailsModal = () => {
-
+const TicketDetailsModal = (props) => {
+    const [getInfo, setInfo] = useState([]);
     const [data, setData] = useState([])
     const fileName = "closed_ticket_list"; // here enter filename for your excel file
-  
+    
+    useEffect(() => {
+        axios.get(`/api/ticket_details_modal/${props.ticketNo}`).then((response) => {
+            setInfo(response.data);
+        });
+    },[props.ticketNo]);
+
+
+
+
     useEffect(() => {
       const fetchData = () =>{
-       axios.get('http://localhost:3001/api/download').then(r => setData(r.data) )
+       axios.get('/api/download').then(r => setData(r.data))
       }
-      fetchData()
+
+      fetchData();
     }, [])
    
   return (
@@ -22,7 +32,7 @@ const TicketDetailsModal = () => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="ticketDetailsLabel">Ticket Details</h5>
+                            <h5 className="modal-title" id="ticketDetailsLabel">Ticket No.: { getInfo.map((item) => { return ( item.ticket_id ) }) }</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
@@ -30,59 +40,59 @@ const TicketDetailsModal = () => {
                             <thead>
                                 <tr>
                                     <th>Date Requested:</th>
-                                    <td>03-03-2020 08:08:00pm</td>
+                                    <td>{getInfo.map((items)=>{ return( items.date_created ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Requestor:</th>
-                                    <td>Elizabeth Santos</td>
+                                    <td>{getInfo.map((items)=>{ return( items.fullname ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Email:</th>
-                                    <td>mail@company.com</td>
+                                    <td>{getInfo.map((items)=>{ return( items.email ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Department:</th>
-                                    <td>Engineering</td>
+                                    <td>{getInfo.map((items)=>{ return( items.department ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Type of Request:</th>
-                                    <td>User Access Management</td>
+                                    <td>{getInfo.map((items)=>{ return( items.ticket_type ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Request Category:</th>
-                                    <td>New User Account Creation</td>
+                                    <td>{getInfo.map((items)=>{ return( items.category_name ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>System:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.system_name ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Operation Rights:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.operation_name ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Validity Period:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.ticket_validity ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Request Details:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.request_details ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Reason for Request:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.request_reason ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>First Approver:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.FirstApprover ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Second Approver:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.SecondApprover ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Implementor:</th>
-                                    <td></td>
+                                    <td>{getInfo.map((items)=>{ return( items.Implementor ) })}</td>
                                 </tr>
                                 <tr>
                                     <th>Attached Logs:</th>

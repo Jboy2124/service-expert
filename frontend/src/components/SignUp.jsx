@@ -31,7 +31,7 @@ const SignUp = () => {
             toast.error("Password and Confirm Password does not match!", {autoClose: 1000})
         } 
         else {
-            axios.post("http://localhost:3001/api/account_checking", { 
+            axios.post("/api/account_checking", { 
             firstname, lastname, email, password, confirmPassword, department, role
             }).then((response) => {
                 if (!response.data.message) {
@@ -57,7 +57,7 @@ const SignUp = () => {
     }
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/get_role").then((response) => {
+        axios.get("/api/get_role").then((response) => {
             setGetRole(response.data);
         });
     },[]);

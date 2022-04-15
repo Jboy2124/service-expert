@@ -5,18 +5,22 @@ import axios from 'axios';
 const AdminOverview = () => {
     const [countUser, setCountUser] = useState([{}]);
     const[countRole, setCountRole] = useState([{}]);
+    const [total, setTotal] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/admin_totaluser").then((response) => {
+        axios.get("/api/admin_totaluser").then((response) => {
             setCountUser(response.data);
+        });
+
+        axios.get("/api/admin_totalrole").then((response) => {
+            setCountRole(response.data);
+        });
+
+        axios.get("/api/get_admin_total_tickets").then((response) => {
+            setTotal(response.data);
         });
     }, []);
 
-    useEffect(() => {
-        axios.get("http://localhost:3001/api/admin_totalrole").then((response) => {
-            setCountRole(response.data);
-        });
-    });
 
   return (
     <div >
@@ -59,7 +63,7 @@ const AdminOverview = () => {
                 <div className="card text-white mb-3 border-radius" >
                     <div className="card-header bg-danger"> <i className="bi bi-ticket"></i></div>
                         <div className="card-body bg-light border-radius-body">
-                            <h1 className="card-title text-center  text-danger">5</h1>
+                            <h1 className="card-title text-center  text-danger">{ total.map((items) => { return ( items.ActiveTicket)}) }</h1>
                             <p className="card-text text-center  text-danger">Active Tickets</p>
                         </div>
                     </div>
@@ -68,7 +72,7 @@ const AdminOverview = () => {
                 <div className="card text-white  mb-3 border-radius" >
                     <div className="card-header bg-secondary"> <i className="bi bi-ticket"></i></div>
                         <div className="card-body bg-light border-radius-body">
-                            <h1 className="card-title text-center text-secondary">15</h1>
+                            <h1 className="card-title text-center text-secondary">{ total.map((items) => { return( items.ClosedTicket ) }) }</h1>
                             <p className="card-text text-center  text-secondary">Closed Tickets</p>
                         </div>
                     </div>
@@ -77,7 +81,7 @@ const AdminOverview = () => {
                 <div className="card text-white mb-3 border-radius" >
                     <div className="card-header bg-success"> <i className="bi bi-ticket"></i></div>
                         <div className="card-body bg-light border-radius-body">
-                            <h1 className="card-title text-center text-success">20</h1>
+                            <h1 className="card-title text-center text-success">{ total.map((items) => { return( items.TotalTicket ) }) }</h1>
                             <p className="card-text text-center text-success">Total Tickets Created </p>
                         </div>
                     </div>

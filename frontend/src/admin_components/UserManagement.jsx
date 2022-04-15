@@ -14,28 +14,28 @@ const UserManagement = () => {
  
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/get_role").then((response) => {
+        axios.get("/api/get_role").then((response) => {
             setGetRole(response.data);
             ;
         });
     },[getRole]);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/get_unconfirmed").then((response) => {
+        axios.get("/api/get_unconfirmed").then((response) => {
             setGetList(response.data);
         });
     }, []);
 
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/get_confirmed").then((response) => {
+        axios.get("/api/get_confirmed").then((response) => {
             setGetConfirmed(response.data);
         });
     }, [getList]);
 
 
     const getSelectedID = (id) => {
-        axios.put("http://localhost:3001/api/confirm_profile", { id }).then((response) => {
+        axios.put("/api/confirm_profile", { id }).then((response) => {
             setTimeout(() => {
                 setGetList(response.data);
             }, 500);
@@ -46,7 +46,7 @@ const UserManagement = () => {
     };
 
     const deleteSelectedID = (id) => {
-        axios.put("http://localhost:3001/api/delete_profile", { id }).then((response) => {
+        axios.put("/api/delete_profile", { id }).then((response) => {
             setTimeout(() => {
                 setGetList(response.data);
             }, 500);
@@ -57,7 +57,7 @@ const UserManagement = () => {
     };
 
     const deleteRole = (id) => {
-        axios.put("http://localhost:3001/api/deleteRole", { id }).then((response) => {
+        axios.put("/api/deleteRole", { id }).then((response) => {
             setTimeout(() => {
                 setGetRole(response.data);
             }, 500);

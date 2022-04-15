@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import TicketDetailsModal from '../modals/TicketDetailsModal'
 import axios from 'axios';
 
 
 const TicketHistoryDashUser = () => {
+    let txtSearch = useRef(null);
+    const [passID, setPassID] = useState("");
     const [history, setHistory] = useState([]);
+    const [searchTicket, setSearchTicket] = useState("");
 
 
     useEffect(() => {
@@ -15,17 +18,24 @@ const TicketHistoryDashUser = () => {
     }, []);
 
 
+    const handleSearchTicket = (e) => {
+        e.preventDefault();
+        setSearchTicket(txtSearch.current.value);
+    }
 
-
+    const handleShowModal = (e, id) => {
+        e.preventDefault();
+        setPassID(id);
+    }
 
   return (
     <div >
         <div id="rightDashboard" className="col-lg-12 col-sm-12">
             <div className="navbar mt-3 mb-3">
                     <div className="container-fluid">
-                        <span className="navbar-brand">Ticket History</span>
+                        <span className="navbar-brand">Ticket Historyssss</span>
                         <form className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Enter Ticket No." aria-label="Search"/>
+                            <input className="form-control me-2" type="search" ref={txtSearch} onChange={handleSearchTicket} placeholder="Enter Ticket No." aria-label="Search"/>
                             <button className="btn buttonStyleGlobal mx-1" type="submit">Search</button>
                             <div className="dropdown mx-2">
                             <button className="btn dropdown-toggle buttonStyleGlobal" type="button" id="dropdownMenuButtonCreate" data-bs-toggle="dropdown" aria-expanded="false"> Sort
@@ -55,12 +65,18 @@ const TicketHistoryDashUser = () => {
                                         </thead>
                                         <tbody>
                                         {
-                                            history.map((items) => {
+                                            history.filter((item) => {
+                                                if(txtSearch === ""){
+                                                    return item
+                                                } else if (item.ticket_id.toLowerCase().includes(searchTicket.toLocaleLowerCase())) {
+                                                    return item
+                                                }
+                                            }).map((items) => {
                                                 return (
                                                     <tr>
-                                                        <th scope="row"> <a href="#" data-bs-toggle="modal" data-bs-target="#ticketDetails">{items.ticket_id}</a></th>
+                                                        <th scope="row"> <a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (items.ticket_id))} data-bs-target="#ticketDetails">{items.ticket_id}</a></th>
                                                         <td>{items.date_created}</td>
-                                                        <td>{items.request_type}</td>
+                                                        <td>{items.type_request}</td>
                                                         <td>{items.ticket_status}</td>
                                                     </tr>
                                                 )
@@ -71,11 +87,11 @@ const TicketHistoryDashUser = () => {
                                 </div>
                             </div>
                         </div>                               
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <TicketDetailsModal/>
+        <TicketDetailsModal ticketNo={passID}/>
     </div>
   )
 }

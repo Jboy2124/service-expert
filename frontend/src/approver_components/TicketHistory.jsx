@@ -1,17 +1,31 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import TicketDetailsModal from '../modals/TicketDetailsModal'
 
 
 
 const TicketHistory = () => {
+    let txtSearch = useRef(null);
     const [getTicket, setGetTicket] = useState([]);
+    const [passId, setPassId] = useState("");
+    const [getText, setTextSearch] = useState("");
 
     useEffect(() => {
         axios.get("/api/getapprovertickethistory").then((response) => {
             setGetTicket(response.data);
         });
     },[]);
+
+
+    const handleShowModal = (e, id) => {
+        e.preventDefault();
+        setPassId(id);
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setTextSearch(txtSearch.current.value);
+    }
     
   return (
     <div>
@@ -20,7 +34,7 @@ const TicketHistory = () => {
                     <div className="container-fluid">
                         <span className="navbar-brand">Ticket History</span>
                         <div className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Enter Ticket No." aria-label="Search"/>
+                            <input className="form-control me-2" ref={txtSearch} onChange={handleSearch} type="search" placeholder="Enter Ticket No." aria-label="Search"/>
                             <button className="btn buttonStyleGlobal mx-1">Search</button>
                             <div className="dropdown mx-2">
                             <button className="btn dropdown-toggle buttonStyleGlobal" type="button" id="dropdownMenuButtonCreate" data-bs-toggle="dropdown" aria-expanded="false"> Sort
@@ -52,18 +66,17 @@ const TicketHistory = () => {
                                         </thead>
                                        
                                         <tbody>
-                                            {/* <tr>
-                                                <th scope="row"><a  href="#" data-bs-toggle="modal" data-bs-target="#ticketDetails" >TN-001</a></th>
-                                                <td>03/22/2022 08:00:00</td>
-                                                <td>Jufel Sakalam</td>
-                                                <td>UAM - New User Account Creation</td>
-                                                <td>Closed</td>
-                                            </tr> */}
                                             {
-                                                getTicket.map((items) => {
+                                                getTicket.filter((items) => {
+                                                    if(txtSearch === "") {
+                                                        return items
+                                                    } else if (items.ticket_id.toLowerCase().includes(getText.toLocaleLowerCase())) {
+                                                        return items
+                                                    }
+                                                }).map((items) => {
                                                     return (
                                                         <tr>
-                                                            <th scope="row"><a  href="#" data-bs-toggle="modal" data-bs-target="#ticketDetails" >{items.ticket_id}</a></th>
+                                                            <th scope="row"><a  href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (items.ticket_id))} data-bs-target="#ticketDetails" >{items.ticket_id}</a></th>
                                                             <td>{items.date_created}</td>
                                                             <td>{items.fullname}</td>
                                                             <td>{items.request_type}</td>
@@ -81,7 +94,7 @@ const TicketHistory = () => {
                 </div>
             </div>
         </div>
-        <TicketDetailsModal/>
+        <TicketDetailsModal ticketNo={passId}/>
     </div>
   )
 }

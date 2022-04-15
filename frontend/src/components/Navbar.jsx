@@ -51,7 +51,6 @@ const Navbar = (props) => {
                             </span>
                           </i>                     
                           </li>
-                          {/* <li className="list-inline-item"><i className="bi bi-person-circle"></i> Jufel</li> */}
                           <li className="list-inline-item"><i className="bi bi-person-circle"></i> {user_name} {user_role}</li>
                           {/* <li className="list-inline-item">{roles}</li> */}
                           <li className="list-inline-item"><a id="reg_acc" href="#" onClick={ () => {navigateHomepage("/")}}>LOGOUT</a></li>
