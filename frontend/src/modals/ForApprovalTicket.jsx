@@ -16,7 +16,6 @@ const ForApprovalTicket = (props) => {
         axios.get(`/api/getticketformodal/${props.ticketNo}`).then((response) => {
             setGetForApproval(response.data);
         });
-
         
     }, [props.ticketNo]);
 

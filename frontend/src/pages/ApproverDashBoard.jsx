@@ -6,7 +6,9 @@ import TicketHistory from '../approver_components/TicketHistory';
 import { useLocation } from 'react-router-dom';
 
 
+
 const ApproverDashBoard = () => {
+
     const getinfo = useLocation();
     const [ getName, setGetName ] = useState([]);
     const [page, setPage] = useState("ApproverOverview");
@@ -19,7 +21,6 @@ const ApproverDashBoard = () => {
   return (
     <div>
         <Navbar name={getName}/>
-        {/* <Navbar /> */}
         <div className="row noMargin">
             <div id="sideBarDash" className="col-lg-2 col-sm-4">
                 <div className="row">

@@ -1,10 +1,13 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState, useEffect, useContext }from 'react';
 import "../css/navbar.css"
 import { useNavigate } from 'react-router-dom'
 import logo from '../images/Untitled2.png'
 import axios from 'axios';
+import { CounterContext } from '../App';
+
 
 const Navbar = (props) => {
+  const cc = useContext(CounterContext);
   const [badgeCount, setBadgeCount] = useState([]);
   const date = new Date().toLocaleDateString();
   const time = new Date().toLocaleTimeString();
@@ -46,7 +49,7 @@ const Navbar = (props) => {
                           <li className="list-inline-item">{date}</li>
                           <li className="list-inline-item"><i id='nav-bell' className="bi bi-bell position-relative">
                           <span style={{ visibility: (roles == 2 && count >= 1) ? "visible" : "hidden" }} id='nav-badge' className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                              {count}
+                              {cc}
                             </span>
                           </i>                     
                           </li>

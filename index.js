@@ -429,7 +429,10 @@ app.get("/api/get_admin_total_tickets", (req, res) => {
 
 
 app.get("/api/admin_ticket_management", (req, response) => {
-    const queryString = `SELECT t.ticket_id, t.date_created, PROFILE_FULLNAME(t.requested_by) as requested_by,
+    const queryString = `SELECT x.ticket_id, x.date_created, x.requested_by, x.request_type, 
+                        IF(x.ticket_status = 'Implemented', 'Closed', x.ticket_status) as ticket_status
+                        FROM
+                        (SELECT t.ticket_id, t.date_created, PROFILE_FULLNAME(t.requested_by) as requested_by,
                         CONCAT(t.ticket_type,' - ',c.category_name) as request_type, t.ticket_status
                         FROM type_uam_ticket t 
                         LEFT JOIN type_uam_category c ON t.uam_category = c.category_id
@@ -437,7 +440,7 @@ app.get("/api/admin_ticket_management", (req, response) => {
                         SELECT t.ticket_id, t.date_created, PROFILE_FULLNAME(t.requested_by) as requested_by,
                         CONCAT(t.ticket_type,' - ',c.category_name) as request_type, t.ticket_status
                         FROM type_sr_ticket t
-                        LEFT JOIN type_sr_category c ON t.sr_category = c.category_id`;
+                        LEFT JOIN type_sr_category c ON t.sr_category = c.category_id) x`;
     db.query(queryString, (err,result) => {
         if(err) {
             console.log("Error: ", err.message);
@@ -1028,7 +1031,6 @@ app.get("/api/gettotalticketapprover/:id", (req, response) => {
 
 app.get("/api/getapproverticketlist/:role", (request, response) => {
     const userRole = parseInt(request.params.role);
-    // console.log("User Role: " + userRole);
     let filter1 = "";
 
     switch(userRole) {
