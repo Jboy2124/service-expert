@@ -8,7 +8,8 @@ const ForApprovalTicket = (props) => {
     const { ticketRemarks, ticketReason } = addStatus;
     const [getForApproval, setGetForApproval] = useState([]);
     let ticketType = getForApproval.map(i => { return ( i.ticket_type) });
-    let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Ticket Implemented" : "Implement Activity";
+    // let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Ticket Implemented" : "Implement Activity";
+    let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Activity Finish" : "Implement Activity";
 
     
 
@@ -41,7 +42,7 @@ const ForApprovalTicket = (props) => {
                     }
                 }
                 break;
-            case "Ticket Implemented":
+            case "Activity Finish":
                 ticket_status = "Implemented";
                 break;
             case "Approve Ticket":
