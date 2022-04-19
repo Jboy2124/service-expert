@@ -640,10 +640,10 @@ app.post("/api/insertuam", (req, res) => {
                     } else {
                         for (let i = 0; i < result.length; i++) {
                             const element = result[i].email;
-                            appList += element+', ';
+                            appList += element+', '; 
                         }
                         appList = appList.toString().replace(/,\s*$/, '');
-                        const getInfo = `select t.ticket_id, t.date_created, t.ticket_type, c.category_name, s.system_name, op.operation_name,
+                        const getInfo = `select t.ticket_id, DATE_FORMAT(t.date_created,'%Y-%c-%d %H:%i:%s') as date_created, t.ticket_type, c.category_name, s.system_name, op.operation_name,
                                         t.uam_validity, t.request_details, t.request_reason, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as requested_by, p.department
                                         from type_uam_ticket t 
                                         left join type_uam_category c on t.uam_category = c.category_id
@@ -699,7 +699,7 @@ app.post("/api/insertsr", (request, response) => {
                     appList = appList.toString().replace(/,\s*$/, '');
                     const getInfo = `select t.ticket_id, t.ticket_type, CONCAT(IFNULL(p.first_name,''),' ',IFNULL(p.last_name,'')) as requested_by,
                                     p.department, c.category_name, s.system_name, t.activity_name, t.activity_details, t.activity_start, t.activity_end,
-                                    t.severity, t.purpose, t.date_created
+                                    t.severity, t.purpose, DATE_FORMAT(t.date_created,'%Y-%c-%d %H:%i:%s') as date_created
                                     from type_sr_ticket t 
                                     left join type_sr_category c on t.sr_category = c.category_id
                                     left join ticket_system s on t.sr_system = s.system_id
@@ -782,6 +782,27 @@ app.get("/api/getsrcategory", (request, response) => {
 
 
 //Requestor Side
+app.get("/api/get_uam_to_update/:id", (req, res) => {
+    const id = req.params.id;
+    const query = `SELECT t.ticket_id, t.requested_by as handled_by, PROFILE_FULLNAME(t.requested_by) as requested_by, p.email, p.department, 
+                    t.uam_category, c.category_name, t.uam_system, s.system_name, t.uam_operation, o.operation_name,
+                    DATE_FORMAT(t.uam_validity,'%Y-%m-%dT%H:%i:%s') as uam_validity, t.request_details, t.request_reason
+                    FROM type_uam_ticket t
+                    LEFT JOIN profile p ON t.requested_by = p.approver_id
+                    LEFT JOIN type_uam_category c ON t.uam_category = c.category_id
+                    LEFT JOIN ticket_system s ON t.uam_system = s.system_id
+                    LEFT JOIn type_uam_operation o ON t.uam_operation = o.operation_id
+                    WHERE t.ticket_id = ?`;
+    db.query(query, id, (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
+
 app.get("/api/getactiveuamtickets/:id", (req, res) => {
     const id = req.params.id;
     const ticketStatus = ['For Approval', 'Approved', 'For I']
@@ -882,7 +903,7 @@ app.get("/api/requestor_ticket_modal_uam/:id", (req, res) => {
 
 app.get("/api/requestor_ticket_modal_sr/:id", (req, res) => {
     const id = req.params.id;
-    const query = `SELECT t.ticket_id, t.date_created, PROFILE_FULLNAME(t.requested_by) as fullname,
+    const query = `SELECT t.ticket_id, t.date_created,  PROFILE_FULLNAME(t.requested_by) as fullname,
                     p.email, p.department, c.category_name, s.system_name, t.activity_name, t.activity_details,
                     t.activity_start, t.activity_end, t.severity, t.purpose, t.ticket_status, 
                     p.first_approver, p.second_approver, p.implementor
@@ -936,6 +957,32 @@ app.get("/api/requestor_ticket_history/:id", (request, response) => {
             console.log("Error: ", err.message);
         } else {
             response.send(result);
+        }
+    });
+});
+
+
+
+app.put("/api/update_uam_ticket", (req, res) => {
+    const { id, handled_by, uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason } = req.body;
+    const query = `UPDATE type_uam_ticket SET uam_category=?, uam_system=?, uam_operation=?, 
+                    uam_validity=?, request_details=?, request_reason=?, ticket_status=? 
+                    WHERE ticket_id=?`;
+    db.query(query, [uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason, 'For Approval', id], (err, result) => {
+        if(err) {
+            console.log("Error: ", err.message);
+        } else {
+            // res.send({message: "Ticket successfully updated"});
+
+            const queryString = `INSERT INTO ticket_status_history (ticket_status, handled_by, reasons, remarks, ticket_id, ticket_type) 
+                                VALUES(?, ?, ?, ?, ?, ?)`;
+            db.query(queryString, ["For Approval", handled_by, uamreason, uamdetails, id, "UAM"], (err, result) => {
+                if(err) {
+                    console.log("Error: ", err.message);
+                } else {
+                    res.send({message: "Ticket successfully updated"});
+                }
+            });
         }
     });
 });

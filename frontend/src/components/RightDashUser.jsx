@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import UAMForm from '../modals/UAMForm'
 
 
-
 const RightDashUser = () => {
     // const [history, setHistory] = useState([]);
     const [loadData, getData] = useState([]);

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import ActiveTicketModal from '../modals/ActiveTicketModal'
+import UpdateTicketForm from '../modals/UpdateTicketForm';
 
 const ActiveTicketDashUser = () => {
+    let reSubmit = 2;
     const [getActiveUAM, setGetActiveUAM] = useState([{}]);
     const [getActiveSR, setGetActiveSR] = useState([{}]);
     const [passID, setPassID] = useState("");
@@ -21,6 +23,13 @@ const ActiveTicketDashUser = () => {
     const handleShowModal =(e, id) => {
         e.preventDefault();
         setPassID(id);
+    }
+
+    const handleReloadList = () => {
+        let id = parseInt(sessionStorage.getItem("sessionid"));
+        axios.get(`/api/getactiveuamtickets/${id}`).then((response) => {
+            setGetActiveUAM(response.data);
+        });
     }
 
   return (
@@ -66,7 +75,7 @@ const ActiveTicketDashUser = () => {
                                                 getActiveUAM.map((items)=>{
                                                     return(
                                                         <tr>
-                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (items.ticket_id))} data-bs-target="#activeUAMTicketModal">{items.ticket_id}</a></th>
+                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (items.ticket_id))}  data-bs-target={(items.ticket_status != 'Returned') ? '#activeUAMTicketModal' : '#activeUAMTicketUpdate'}>{items.ticket_id}</a></th>
                                                             <td>{items.date_created}</td>
                                                             <td>{items.category_name}</td>
                                                             <td>{items.ticket_status}</td>
@@ -96,7 +105,7 @@ const ActiveTicketDashUser = () => {
                                                 getActiveSR.map((i)=>{
                                                     return(
                                                         <tr>
-                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (i.ticket_id))} data-bs-target="#activeSRTicketModal">{i.ticket_id}</a></th>
+                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (i.ticket_id))} data-bs-target={(i.ticket_status != 'Returned') ? '#activeSRTicketModal' : '#ctiveSRTicketUpdate'}>{i.ticket_id}</a></th>
                                                             <td>{i.date_created}</td>
                                                             <td>{i.category_name}</td>
                                                             <td>{i.ticket_status}</td>
@@ -116,6 +125,7 @@ const ActiveTicketDashUser = () => {
         
         </div> 
         <ActiveTicketModal ticketNo={passID} />
+        <UpdateTicketForm ticketNo={passID} handleReload={handleReloadList} />
     </div>
   )
 }

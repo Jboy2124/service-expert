@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios';
 import ForApprovalTicket from '../modals/ForApprovalTicket'
-import { CounterContext } from '../App';
+// import { CounterContext } from '../App';
 
 
 const ApproverTicketMng = () => {
@@ -11,7 +11,7 @@ const ApproverTicketMng = () => {
     const [getApproverTicket, setGetApproverTicket] = useState([]);
     const [getApproverActive, setGetApproverActive] = useState([]);
     const [passTicket, setPassTicket] = useState("");
-    const [updateCount, setUpdateCount] = useState(useContext(CounterContext));
+    // const [updateCount, setUpdateCount] = useState(useContext(CounterContext));
     let userRole = (getRole.map((itms) => { return (itms.role) }));
     
 
@@ -48,7 +48,7 @@ const ApproverTicketMng = () => {
             setGetApproverTicket(response.data);
         });
 
-        setUpdateCount(26);
+        // setUpdateCount(26);
     }
 
   return (
@@ -96,8 +96,8 @@ const ApproverTicketMng = () => {
                                                         <td>{items.fullname}</td>
                                                         <td>{items.department}</td>
                                                         <td>{items.request_type}</td>
-                                                        {/* <td>{items.ticket_status}</td> */}
-                                                        <td>{updateCount}</td>
+                                                        <td>{items.ticket_status}</td>
+                                                        {/* <td>{updateCount}</td> */}
                                                     </tr>
                                                 )
                                             })
