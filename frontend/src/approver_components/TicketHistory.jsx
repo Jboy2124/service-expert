@@ -11,11 +11,14 @@ const TicketHistory = () => {
     const [getText, setTextSearch] = useState("");
 
     useEffect(() => {
-        axios.get("/api/getapprovertickethistory").then((response) => {
-            setGetTicket(response.data);
-        });
+        getInformationList();
     },[]);
 
+
+    const getInformationList = async () => {
+        const response = await axios.get("/api/getapprovertickethistory");
+        setGetTicket(response.data);
+    }
 
     const handleShowModal = (e, id) => {
         e.preventDefault();
@@ -34,7 +37,7 @@ const TicketHistory = () => {
                     <div className="container-fluid">
                         <span className="navbar-brand">Ticket History</span>
                         <div className="d-flex">
-                            <input className="form-control me-2" ref={txtSearch} onChange={handleSearch} type="search" placeholder="Enter Ticket No." aria-label="Search"/>
+                            <input className="form-control me-2" ref={txtSearch} onChange={handleSearch} type="search" placeholder="Search Ticket..." aria-label="Search"/>
                             <button className="btn buttonStyleGlobal mx-1">Search</button>
                             <div className="dropdown mx-2">
                             <button className="btn dropdown-toggle buttonStyleGlobal" type="button" id="dropdownMenuButtonCreate" data-bs-toggle="dropdown" aria-expanded="false"> Sort
@@ -70,7 +73,10 @@ const TicketHistory = () => {
                                                 getTicket.filter((items) => {
                                                     if(txtSearch === "") {
                                                         return items
-                                                    } else if (items.ticket_id.toLowerCase().includes(getText.toLocaleLowerCase())) {
+                                                    } else if (items.ticket_id.toLowerCase().includes(getText.toLocaleLowerCase()) || 
+                                                                items.ticket_status.toLocaleLowerCase().includes(getText.toLocaleLowerCase()) || 
+                                                                items.fullname.toLocaleLowerCase().includes(getText.toLocaleLowerCase()) || 
+                                                                items.request_type.toLocaleLowerCase().includes(getText.toLocaleLowerCase())) {
                                                         return items
                                                     }
                                                 }).map((items) => {

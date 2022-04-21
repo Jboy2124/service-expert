@@ -11,11 +11,15 @@ const TicketHistoryDashUser = () => {
 
 
     useEffect(() => {
-        const id = parseInt(sessionStorage.getItem("sessionid"));
-        axios.get(`/api/requestor_ticket_history/${id}`).then((response) => {
-            setHistory(response.data);
-        });
+        getInformation();
     }, []);
+
+
+    const getInformation = async () => {
+        const id = parseInt(sessionStorage.getItem("sessionid"));
+        const response = await axios.get(`/api/requestor_ticket_history/${id}`);
+        setHistory(response.data);
+    }
 
 
     const handleSearchTicket = (e) => {
@@ -33,9 +37,9 @@ const TicketHistoryDashUser = () => {
         <div id="rightDashboard" className="col-lg-12 col-sm-12">
             <div className="navbar mt-3 mb-3">
                     <div className="container-fluid">
-                        <span className="navbar-brand">Ticket Historyssss</span>
+                        <span className="navbar-brand">Ticket History</span>
                         <form className="d-flex">
-                            <input className="form-control me-2" type="search" ref={txtSearch} onChange={handleSearchTicket} placeholder="Enter Ticket No." aria-label="Search"/>
+                            <input className="form-control me-2" type="search" ref={txtSearch} onChange={handleSearchTicket} placeholder="Search Ticket" aria-label="Search"/>
                             <button className="btn buttonStyleGlobal mx-1" type="submit">Search</button>
                             <div className="dropdown mx-2">
                             <button className="btn dropdown-toggle buttonStyleGlobal" type="button" id="dropdownMenuButtonCreate" data-bs-toggle="dropdown" aria-expanded="false"> Sort
@@ -68,7 +72,9 @@ const TicketHistoryDashUser = () => {
                                             history.filter((item) => {
                                                 if(txtSearch === ""){
                                                     return item
-                                                } else if (item.ticket_id.toLowerCase().includes(searchTicket.toLocaleLowerCase())) {
+                                                } else if (item.ticket_id.toLowerCase().includes(searchTicket.toLocaleLowerCase()) ||
+                                                            item.ticket_status.toLocaleLowerCase().includes(searchTicket.toLocaleLowerCase()) || 
+                                                            item.type_request.toLocaleLowerCase().includes(searchTicket.toLocaleLowerCase())) {
                                                     return item
                                                 }
                                             }).map((items) => {

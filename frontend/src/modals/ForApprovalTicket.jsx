@@ -7,19 +7,22 @@ const ForApprovalTicket = (props) => {
     const [addStatus, setStatus] = useState([]);
     const { ticketRemarks, ticketReason } = addStatus;
     const [getForApproval, setGetForApproval] = useState([]);
-    let ticketType = getForApproval.map(i => { return ( i.ticket_type) });
-    // let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Ticket Implemented" : "Implement Activity";
-    let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Activity Finish" : "Implement Activity";
+    const [ticketStat, setTicketStatus] = useState("");
 
     
 
     useEffect(() => {
-        axios.get(`/api/getticketformodal/${props.ticketNo}`).then((response) => {
-            setGetForApproval(response.data);
-        });
-        
-    }, [props.ticketNo]);
+       getListOfData();
+    }, [props.ticketNo, addStatus]);
 
+    const getListOfData = async () => {
+        const response = await axios.get(`/api/getticketformodal/${props.ticketNo}`);
+        setGetForApproval(response.data);
+    }
+
+
+    let ticketType = getForApproval.map(i => { return ( i.ticket_type) });
+    let ticketStatusForButtons =  (getForApproval.map(i => { return ( i.ticket_status) }) == "Implementing Ticket") ? "Activity Finish" : "Implement Activity";
 
 
     const handleEventTicketStatus = (e, t_status) => {
@@ -28,32 +31,28 @@ const ForApprovalTicket = (props) => {
         const userid = parseInt(sessionStorage.getItem("sessionid"));
         const ticketNo = props.ticketNo;
         let ticket_status = "";
-
+       
         switch(btnType){
+            
             case "Implement Activity":
                 if(getForApproval.map((items) => { return (items.ticket_status) }) == "IS Approved") {
                     ticket_status = "For Implementation";
+                } else if(getForApproval.map((items) => { return (items.ticket_status) }) == "Approved for Implementation") {
+                    ticket_status = "Implementing Ticket";
                 } else {
-                    // ticket_status = "For Implementation";
-                    if(getForApproval.map((items) => { return (items.ticket_status) }) == "Approved for Implementation") {
-                        ticket_status = "Implementing Ticket";
-                    } else {
-                        ticket_status = t_status;
-                    }
+                    ticket_status = t_status;
                 }
                 break;
             case "Activity Finish":
-                ticket_status = "Implemented";
+                ticket_status = "For Post Checking";
                 break;
             case "Approve Ticket":
                 if(getForApproval.map((items) => { return (items.ticket_status) }) == "For IS Approval") {
                     ticket_status = "IS Approved";
+                } else if(getForApproval.map((items) => { return (items.ticket_status) }) == "For Implementation") {
+                    ticket_status = "Approved for Implementation";
                 } else {
-                    if(getForApproval.map((items) => { return (items.ticket_status) }) == "For Implementation") {
-                        ticket_status = "Approved for Implementation";
-                    } else {
-                        ticket_status = t_status;
-                    }
+                    ticket_status = t_status;
                 }
                 break;
             case "Return Ticket":
@@ -66,7 +65,6 @@ const ForApprovalTicket = (props) => {
                 ticket_status = t_status;
                 break;
         }
-
 
 
         axios.put("/api/updateticketstatus", {
@@ -166,8 +164,8 @@ const ForApprovalTicket = (props) => {
                             </thead>
                         </table>
                             <div className="modal-footer">
-                                <button className='btn btn-secondary'><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#returnTicket">Return Ticket for Revision</a> </button>
-                                <button className='btn buttonStyleGlobal' ><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#approveTicket">Approve Ticket</a> </button>
+                                <button className='btn btn-secondary'><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#returnTicket">Return Ticket for Revision</a> </button>
+                                <button className='btn buttonStyleGlobal' ><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#approveTicket">Approve Ticket</a> </button>
                             </div>
                     </div>
                 </div>
@@ -202,7 +200,7 @@ const ForApprovalTicket = (props) => {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="submit" name='btnImplementTicket' className="btn buttonStyleGlobal" value="Return Ticket">Return Ticket</button>
+                                <button type="submit" name='btnImplementTicket' className="btn buttonStyleGlobal" data-bs-dismiss="modal" value="Return Ticket">Return Ticket</button>
                             </div>
                         </form>
                     </div>
@@ -231,7 +229,7 @@ const ForApprovalTicket = (props) => {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="submit" name='btnImplementTicket' className="btn buttonStyleGlobal" value="Approve Ticket">Approve Ticket</button>
+                                <button type="submit" name='btnImplementTicket' className="btn buttonStyleGlobal" data-bs-dismiss="modal" value="Approve Ticket">Approve Ticket</button>
                             </div>
                         </form>
                     </div>
@@ -296,8 +294,8 @@ const ForApprovalTicket = (props) => {
                             </thead>
                         </table>
                             <div className="modal-footer">
-                                <button style={{ visibility: (getForApproval.map((item) => { return (item.ticket_status) })  == "IS Approved" ) ? "hidden" : "visible" }} className='btn btn-secondary'><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#isApprovalTicket">For I.S Approval</a> </button>
-                                <button className='btn buttonStyleGlobal '><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#implementTicket">{ticketStatusForButtons}</a> </button>
+                                <button style={{ visibility: (getForApproval.map((item) => { return (item.ticket_status) })  == "IS Approved" ) ? "hidden" : "visible" }} className='btn btn-secondary'><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#isApprovalTicket">For I.S Approval</a> </button>
+                                <button className='btn buttonStyleGlobal '><a className="text-white text-decoration-none" href="#" data-bs-toggle="modal"  data-bs-dismiss="modal" data-bs-target="#implementTicket">{ticketStatusForButtons}</a> </button>
                             </div>
                     </div>
                 </div>
@@ -325,7 +323,7 @@ const ForApprovalTicket = (props) => {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="submit" className="btn buttonStyleGlobal" name='btnImplementTicket' value="For IS Approval">Transfer Ticket for IS Approval</button>
+                                <button type="submit" className="btn buttonStyleGlobal" name='btnImplementTicket' data-bs-dismiss="modal"  value="For IS Approval">Transfer Ticket for IS Approval</button>
                             </div>
                         </form>
                     </div>
@@ -354,7 +352,7 @@ const ForApprovalTicket = (props) => {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="submit" name='btnImplementTicket' className="btn buttonStyleGlobal" value={ticketStatusForButtons}>{ticketStatusForButtons}</button>
+                                <button type="submit" name='btnImplementTicket' className="btn buttonStyleGlobal" data-bs-dismiss="modal" value={ticketStatusForButtons}>{ticketStatusForButtons}</button>
                             </div>
                         </form>
                     </div>

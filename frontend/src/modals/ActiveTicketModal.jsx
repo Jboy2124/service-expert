@@ -4,17 +4,27 @@ import React, { useEffect, useState } from 'react'
 const ActiveTicketModal = (props) => {
     const [getUAMInfoList, setUAMInfoList] = useState([]);
     const [getSRInfoList, setSRInfoList] = useState([]);
+    // const [getTicket, setTicket] = useState(props.ticketNo);
 
     useEffect(() => {
-        axios.get(`/api/requestor_ticket_modal_uam/${props.ticketNo}`).then((response) => {
-            setUAMInfoList(response.data);
-        });
-
-        axios.get(`/api/requestor_ticket_modal_sr/${props.ticketNo}`).then((response) => {
-            setSRInfoList(response.data);
-        });
+        getDataList();
     },[props.ticketNo]);
 
+
+    const getDataList = async () => {
+        const uam_response = await axios.get(`/api/requestor_ticket_modal_uam/${props.ticketNo}`);
+        setUAMInfoList(uam_response.data);
+
+        const sr_response = await axios.get(`/api/requestor_ticket_modal_sr/${props.ticketNo}`);
+        setSRInfoList(sr_response.data);
+
+    }
+
+
+    const handleCloseButton = (e) => {
+        e.preventDefault();
+        getDataList();
+    }
 
     
     let id=(props.ticketNo), date_="", fname="", 
@@ -68,7 +78,7 @@ const ActiveTicketModal = (props) => {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="activeUAMTicketModal">Ticket Details</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" onClick={handleCloseButton} data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
                             <table className='table table-bordered'>
@@ -140,7 +150,7 @@ const ActiveTicketModal = (props) => {
                             </thead>
                             </table>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseButton} data-bs-dismiss="modal">Close</button>
                                 </div>
                           </div>
                     </div>

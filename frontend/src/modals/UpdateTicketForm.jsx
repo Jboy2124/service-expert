@@ -4,6 +4,13 @@ import swal from 'sweetalert';
 
 
 const UpdateTicketForm = (props) => {
+
+    const [activity, setActivity] = useState("");
+    const [actDetails, setActDetails] = useState("");
+    const [actStart, setActStart] = useState("");
+    const [actEnd, setActEnd] = useState("");
+    const [actSeverity, setActSeverity] = useState("");
+    const [actPurpose, setActPurpose] = useState("");
     const [category, setCategory] = useState([]);
     const [getUAM, setUAM] = useState([]);
     const [system_, setSystem_] = useState([]);
@@ -17,48 +24,103 @@ const UpdateTicketForm = (props) => {
         uamreason:""
     });
     const {uamcategory, uamsystem, uamoperation, uamvalidity, uamdetails, uamreason } = updateUAM;
-
+    const [getReason, setReason] = useState("");
+    const [getDetails, setDetails] = useState("");
+    const [getValidity, setValidity] = useState("");
+    const [getSR, setSRList] = useState([]);
     
+    const [srCategory, setSRCategory] = useState([]);
+    const [updateSR, setUpdateSR] = useState({
+        typeSRSystem: 0,
+        typeSRCategory: 0
+    });
+    const {typeSRSystem, typeSRCategory} = updateSR;
 
     useEffect(() => {
-        axios.get("/api/category").then((response) => {
-            setCategory(response.data);
-        });
-
-        axios.get("/api/getsystem").then((response) => {
-            setSystem_(response.data);
-        });
-
-        axios.get("/api/getoperation").then((response) => {
-            setOperation_(response.data);
-        });
-    }, []);
-
-    useEffect(() => {
-        axios.get(`/api/get_uam_to_update/${props.ticketNo}`).then((response) => {
-            setUAM(response.data);
-        });
+        getUAMList();
     }, [props.ticketNo]);
 
+    const getUAMList = async () => {
+        const response = await axios.get(`/api/get_uam_to_update/${props.ticketNo}`);
+        setUAM(response.data);
+        
+        const result = await axios.get(`/api/get_sr_to_update/${props.ticketNo}`);
+        setSRList(result.data);
+  
+
+        //fields that needs to update (UAM)
+        const data_reason = response.data.map(items => { return items.request_reason });
+        setReason(data_reason);
+        
+        const data_details = response.data.map(i => { return i.request_details });
+        setDetails(data_details);
+
+        const data_validity = response.data.map(item => { return item.uam_validity });
+        setValidity(data_validity);
+
+
+
+        const actName = result.data.map(i => { return i.activity_name });
+        setActivity(actName);
+
+        const act_Details = result.data.map(i => i.activity_details);
+        setActDetails(act_Details);
+
+        const date_start = result.data.map(i => i.activity_start);
+        setActStart(date_start);
+
+        const date_end = result.data.map(i => i.activity_end);
+        setActEnd(date_end);
+
+        const req_severity = result.data.map(i => i.severity);
+        setActSeverity(req_severity);
+
+        const req_purpose = result.data.map(i => i.purpose);
+        setActPurpose(req_purpose);
+
+    }
+
+    
+    useEffect(() => {
+        loadMisc();
+    }, [props.ticketNo]);
+
+    const loadMisc = async () => {
+        const categoryResponse = await axios.get("/api/category");
+        setCategory(categoryResponse.data);
+
+        const systemResponse = await axios.get("/api/getsystem");
+        setSystem_(systemResponse.data);
+
+        const operationResponse = await axios.get("/api/getoperation");
+        setOperation_(operationResponse.data);
+
+
+        const category_sr = await axios.get("/api/sr_category");
+        setSRCategory(category_sr.data);
+    }
 
 
     let category_ = getUAM.map(items => {return (items.category_name)});
     let category_id_ = getUAM.map(items => {return (items.uam_category)});
-
     let system_uam = getUAM.map(items => {return (items.system_name)});
     let system_id_ = getUAM.map(items => {return (items.uam_system)});
-
     let operation_uam = getUAM.map(items => {return (items.operation_name)});
     let operation_id_ = getUAM.map(items => {return (items.uam_operation)});
 
-    
 
+    let sr_category_id = getSR.map(i => i.category_id);
+    let sr_category_name = getSR.map(i => i.category_name);
+    let sr_system_id = getSR.map(i => i.sr_system);
+    let sr_system_name = getSR.map(i => i.system_name);
+    
+    
     const handleReSubmitTicket = (event) => {
         event.preventDefault();
         const id = props.ticketNo;
         const handled_by = getUAM.map((items) => {return (items.handled_by)});
         axios.put(`/api/update_uam_ticket`, {
-            id, handled_by, uamcategory, uamsystem, uamoperation, uamdetails, uamreason
+            id, handled_by, uamcategory, uamsystem, uamoperation, getValidity, getDetails, getReason
         }).then((response) => {
             props.handleReload();
             setUpdateUAM({
@@ -69,21 +131,80 @@ const UpdateTicketForm = (props) => {
                 uamdetails:"", 
                 uamreason:""
             });
+            setValidity("");
+            setDetails("");
+            setReason("");
             swal("Re-submit", response.data.message, "success");
-            // alert(response.data.message);
         });
-        
     }
 
 
+
+    const handleReSubmitSRTicket = (e) => {
+        e.preventDefault();
+        const id = props.ticketNo;
+        const handled_by = getSR.map(i => i.handled_by);
+        axios.put(`/api/update_sr_ticket`, {
+            id, handled_by, typeSRCategory, typeSRSystem, activity, actDetails, actStart, actEnd, actSeverity, actPurpose
+        }).then((response) => {
+            props.handleReload();
+            setUpdateSR({
+                typeSRSystem: "",
+                typeSRCategory: ""
+            });
+            swal("Re-Submit", response.data.message, "success");
+        });
+    }
+
+    //UAM
     const handleInputChange = (event) => {
         const {name, value} = event.target;
         setUpdateUAM({...updateUAM, [name] : value});
-        
+    }
+
+    const handleDataReason = (newValue) => {
+        setReason(newValue);
+    }
+
+    const handleDataDetails = (newValue) => {
+        setDetails(newValue);
+    }
+
+    const handleDataValidity = (newValue) => {
+        setValidity(newValue);
     }
 
 
 
+    //SR
+    const handleSRInputChange = (event) => {
+        const {name, value} = event.target;
+        setUpdateSR({...updateSR, [name] : value});
+    }
+
+    const changeActivity = (val) => {
+        setActivity(val);
+    }
+
+    const changeDetails = (newValue) => {
+        setActDetails(newValue);
+    }
+
+    const changeStartDate = (newValue) => {
+        setActStart(newValue);
+    }
+
+    const changeEndDate = (newValue) => {
+        setActEnd(newValue);
+    }
+
+    const changeRequestSeverity = (newValue) => {
+        setActSeverity(newValue);
+    }
+
+    const changeRequestPurpose = (newValue) => {
+        setActPurpose(newValue);
+    }
   return (
     <div >  
             <div className="modal fade" id="activeUAMTicketUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -167,19 +288,19 @@ const UpdateTicketForm = (props) => {
                                 <div className="row mb-1">
                                     <label className="col-sm-3 form-label">Validity Period:</label>
                                     <div className="col-sm-9">
-                                        <input id="startDate" className="form-control" name='uamvalidity' onChange={handleInputChange} type="datetime-local" />
+                                        <input id="startDate" className="form-control" name='uamvalidity' onChange={(e) => handleDataValidity(e.target.value)} value={getValidity} type="datetime-local" />
                                     </div>
                                 </div>
                                 <div className="row mb-1">
                                     <label className="col-sm-3 form-label">Request Details:  </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="uamdetails" name='uamdetails' onChange={handleInputChange} placeholder="Specify request details" required/>
+                                      <input type="text" className="form-control" id="uamdetails" name='uamdetails' onChange={(e) => handleDataDetails(e.target.value)} value={getDetails} placeholder="Specify request details" required/>
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <label className="col-sm-3 form-label">Reason for request:  </label>
                                     <div className="col-sm-9">
-                                      <input type="text" className="form-control" id="request_reason" name='request_reason' onChange={handleInputChange} placeholder="Specify reason for request" required />
+                                      <input type="text" className="form-control" id="request_reason" name='request_reason' onChange={(e) => handleDataReason(e.target.value)} value={getReason}  placeholder="Specify reason for request" required></input>
                                     </div> 
                                 </div>                           
                                 <div className="modal-footer">
@@ -188,7 +309,7 @@ const UpdateTicketForm = (props) => {
                                 </div>
                               </form>
                         </div>
-                    </div>9+7
+                    </div>
                 </div>
             </div>
 
@@ -202,90 +323,90 @@ const UpdateTicketForm = (props) => {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
-                        <form action='' onSubmit="" method='post'> 
+                        <form action='' onSubmit={handleReSubmitSRTicket} method='post'> 
                             <div className="row mb-1">
                               <label for="" className="col-sm-3 form-label">Ticket No. </label>
                               <div className="col-sm-9">
-                                <input type="text" className="form-control" name='srTicketNo' id=""disabled />
+                                <input type="text" className="form-control" name='srTicketNo' value={getSR.map(i => i.ticket_id)} id=""disabled />
                               </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Requestor: </label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" id="" disabled />
+                                  <input type="text" className="form-control" id="" value={getSR.map(i => i.requested_by)} disabled />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Email: </label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" id="" disabled />
+                                  <input type="text" className="form-control" id="" value={getSR.map(i => i.email)} disabled />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Department:</label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" id="" disabled />
+                                  <input type="text" className="form-control" id="" value={getSR.map(i => i.department)} disabled />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">SR Category:</label>
                                 <div className="col-sm-9">
-                                    <select className="form-select" name='srCategory' aria-label="Default select">
-                                        <option selected disabled>Select category</option>
-                                        {/* {
-                                            getSRCategory.map((item) => {
+                                    <select className="form-select" name='typeSRCategory' onChange={handleSRInputChange} aria-label="Default select">
+                                        <option selected value={sr_category_id}>{sr_category_name}</option>
+                                        {
+                                            srCategory.map((item) => {
                                                 return (
                                                     <option value={item.category_id}>{item.category_name}</option>
                                                 )
                                             })
-                                        } */}
+                                        }
                                     </select>
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">System:</label>
                                 <div className="col-sm-9">
-                                    <select className="form-select" name='srSystem' aria-label="Default select">
-                                        <option value="" selected disabled>Select system</option>
-                                        {/* {
-                                            getSystem.map((items) => {
+                                    <select className="form-select" name='typeSRSystem' onChange={handleSRInputChange} aria-label="Default select">
+                                        <option selected value={sr_system_id}>{sr_system_name}</option>
+                                        {
+                                            system_.map((items) => {
                                                 return (
                                                     <option value={items.system_id} >{items.system_name}</option>
                                                 )
                                             })
-                                        } */}
+                                        }
                                     </select>
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Activity Name:   </label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" id="" name='srActivity' placeholder="Enter activity name" />
+                                  <input type="text" className="form-control" id="" name='typeSRActivity' value={activity} onChange={(e) => changeActivity(e.target.value)}  placeholder="Enter activity name" />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Activity Details:   </label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" name='srDetails' id="" placeholder="Specify activity details" />
+                                  <input type="text" className="form-control" name='typeSRDetails' id="" onChange={(e) => changeDetails(e.target.value)}  value={actDetails} placeholder="Specify activity details" />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Activity Schedule Start:</label>
                                 <div className="col-sm-9">
-                                    <input id="startDate" className="form-control" name='srSched1' type="datetime-local" />
+                                    <input id="startDate" className="form-control" name='srSched1' onChange={(e) => changeStartDate(e.target.value)} value={actStart} type="datetime-local" />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Activity Schedule End:</label>
                                 <div className="col-sm-9">
-                                    <input id="startDate" className="form-control" name='srSched2' type="datetime-local" />
+                                    <input id="startDate" className="form-control" name='srSched2' onChange={(e) => changeEndDate(e.target.value)}  value={actEnd} type="datetime-local" />
                                 </div>
                             </div>
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Severity:</label>
                                 <div className="col-sm-9">
-                                    <select className="form-select" name='srSeverity' aria-label="Default select">
-                                        <option value="" selected disabled>Select severity of request</option>
+                                    <select className="form-select" name='srSeverity' onChange={(e) => changeRequestSeverity(e.target.value)}  value={actSeverity} aria-label="Default select">
+                                        <option value="" selected disabled>Request Severity</option>
                                         <option value="Minor">Minor</option>
                                         <option value="Major">Major</option>
                                     </select>
@@ -294,7 +415,7 @@ const UpdateTicketForm = (props) => {
                             <div className="row mb-1">
                                 <label for="" className="col-sm-3 form-label">Purpose:  </label>
                                 <div className="col-sm-9">
-                                  <input type="text" className="form-control" name='srPurpose' id=""placeholder="Specify purpose of activity" required/>
+                                  <input type="text" className="form-control" name='srPurpose' id="" onChange={(e) => changeRequestPurpose(e.target.value)}  value={actPurpose} placeholder="Specify purpose of activity" required/>
                                 </div>
                             </div>
                             <div className="modal-footer">

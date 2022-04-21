@@ -11,7 +11,7 @@ import ApproverDashBoard from './pages/ApproverDashBoard';
 import axios from 'axios';
 axios.defaults.baseURL="http://localhost:3001";
 export const CounterContext = createContext();
-const myCounter = 21;
+const myCounter = 0;
 
 const App = () => {
   return (

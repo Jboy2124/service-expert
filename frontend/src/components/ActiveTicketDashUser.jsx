@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
 import ActiveTicketModal from '../modals/ActiveTicketModal'
 import UpdateTicketForm from '../modals/UpdateTicketForm';
+import ApprovalToCloseModal from '../modals/ApprovalToCloseModal';
 
 const ActiveTicketDashUser = () => {
-    let reSubmit = 2;
-    const [getActiveUAM, setGetActiveUAM] = useState([{}]);
-    const [getActiveSR, setGetActiveSR] = useState([{}]);
+    let txtSearch = useRef(null);
+    const [getActiveUAM, setGetActiveUAM] = useState([]);
+    const [getActiveSR, setGetActiveSR] = useState([]);
     const [passID, setPassID] = useState("");
+    const [tabType, setTabType] = useState("UAM");
+    const [getText, setTextSearch] = useState("");
+    let array = [];
 
     useEffect(() => {
-        let id = parseInt(sessionStorage.getItem("sessionid"));
-        axios.get(`/api/getactiveuamtickets/${id}`).then((response) => {
-            setGetActiveUAM(response.data);
-        });
-
-        axios.get(`/api/getactivesrtickets/${id}`).then((response) => {
-            setGetActiveSR(response.data);
-        });
+        handleReloadList();
     }, []);
 
     const handleShowModal =(e, id) => {
@@ -25,13 +22,33 @@ const ActiveTicketDashUser = () => {
         setPassID(id);
     }
 
-    const handleReloadList = () => {
+    const handleReloadList = async () => {
         let id = parseInt(sessionStorage.getItem("sessionid"));
-        axios.get(`/api/getactiveuamtickets/${id}`).then((response) => {
-            setGetActiveUAM(response.data);
-        });
+
+        const response = await axios.get(`/api/getactiveuamtickets/${id}`);
+        setGetActiveUAM(response.data);
+
+        const result = await axios.get(`/api/getactivesrtickets/${id}`);
+        setGetActiveSR(result.data);
+
     }
 
+    const getTabPane = (e, type) => {
+        e.preventDefault();
+        setTabType(type);
+    }
+
+    if(tabType == "UAM") {
+        array = getActiveUAM;
+    } else {
+        array = getActiveSR;
+    }
+
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setTextSearch(txtSearch.current.value);
+    }
   return (
     <div >
         <div id="rightDashboard" className="col-lg-12">
@@ -39,7 +56,7 @@ const ActiveTicketDashUser = () => {
                       <div className="container-fluid">
                           <span className="navbar-brand">Active Tickets</span>
                           <form className="d-flex">
-                              <input className="form-control me-2" type="search" placeholder="Enter Ticket No." aria-label="Search"/>
+                              <input className="form-control me-2" ref={txtSearch} onChange={handleSearch} type="search" placeholder="Search Ticket..." aria-label="Search"/>
                               <button className="btn buttonStyleGlobal" type="submit">Search</button>
                           </form>
                       </div>  
@@ -48,10 +65,10 @@ const ActiveTicketDashUser = () => {
                     <div className="card-header">
                         <ul className="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                         <li className="nav-item" role="presentation">
-                            <a className="nav-link active" id="UAM-tab" data-bs-toggle="tab" href="#UAM" role="tab" aria-controls="UAM" aria-selected="true">User Access Management</a>
+                            <a className="nav-link active" id="UAM-tab" onClick={(e) => getTabPane(e, "UAM")} data-bs-toggle="tab" href="#UAM" role="tab" aria-controls="UAM" aria-selected="true" >User Access Management</a>
                         </li>
                         <li className="nav-item" role="presentation">
-                            <a className="nav-link" id="SR-tab" data-bs-toggle="tab" href="#SR" role="tab" aria-controls="SR" aria-selected="false">Service Request</a>
+                            <a className="nav-link" id="SR-tab" onClick={(e) => getTabPane(e, "SR")} data-bs-toggle="tab" href="#SR" role="tab" aria-controls="SR" aria-selected="false">Service Request</a>
                         </li>
                         
                         </ul>
@@ -72,16 +89,24 @@ const ActiveTicketDashUser = () => {
                                             </thead>
                                             <tbody>
                                             {
-                                                getActiveUAM.map((items)=>{
+                                               array.filter((items) => {
+                                                   if(txtSearch === "") {
+                                                       return items
+                                                   } else if(items.ticket_id.toLowerCase().includes(getText.toLowerCase()) || 
+                                                             items.category_name.toLowerCase().includes(getText.toLowerCase()) ||
+                                                             items.ticket_status.toLowerCase().includes(getText.toLowerCase())) {
+                                                        return items
+                                                   }
+                                               }).map((item) => {
                                                     return(
                                                         <tr>
-                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (items.ticket_id))}  data-bs-target={(items.ticket_status != 'Returned') ? '#activeUAMTicketModal' : '#activeUAMTicketUpdate'}>{items.ticket_id}</a></th>
-                                                            <td>{items.date_created}</td>
-                                                            <td>{items.category_name}</td>
-                                                            <td>{items.ticket_status}</td>
+                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (item.ticket_id))}  data-bs-target={(item.ticket_status != 'Returned') ?  ((item.ticket_status == 'For Post Checking') ? '#UAMTicketComplete' : '#activeUAMTicketModal') : '#activeUAMTicketUpdate'}>{item.ticket_id}</a></th>
+                                                            <td>{item.date_created}</td>
+                                                            <td>{item.category_name}</td>
+                                                            <td>{item.ticket_status}</td>
                                                         </tr>
                                                     )
-                                                })
+                                               })
                                             }
                                             </tbody>
                                         </table>
@@ -101,30 +126,38 @@ const ActiveTicketDashUser = () => {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {
-                                                getActiveSR.map((i)=>{
-                                                    return(
-                                                        <tr>
-                                                            <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (i.ticket_id))} data-bs-target={(i.ticket_status != 'Returned') ? '#activeSRTicketModal' : '#ctiveSRTicketUpdate'}>{i.ticket_id}</a></th>
-                                                            <td>{i.date_created}</td>
-                                                            <td>{i.category_name}</td>
-                                                            <td>{i.ticket_status}</td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
+                                                {
+                                                    array.filter((items) => {
+                                                        if(txtSearch === "") {
+                                                            return items
+                                                        } else if(items.ticket_id.toLowerCase().includes(getText.toLowerCase()) || 
+                                                                  items.category_name.toLowerCase().includes(getText.toLowerCase()) ||
+                                                                  items.ticket_status.toLowerCase().includes(getText.toLowerCase())) {
+                                                             return items
+                                                        }
+                                                    }).map((item) => {
+                                                         return(
+                                                             <tr>
+                                                                 <th ><a href="#" data-bs-toggle="modal" onClick={(e) => handleShowModal(e, (item.ticket_id))} data-bs-target={(item.ticket_status != 'Returned') ?  ((item.ticket_status == 'For Post Checking') ? '#SRTicketComplete' : '#activeSRTicketModal') : '#activeSRTicketUpdate'}>{item.ticket_id}</a></th>
+                                                                 <td>{item.date_created}</td>
+                                                                 <td>{item.category_name}</td>
+                                                                 <td>{item.ticket_status}</td>
+                                                             </tr>
+                                                         )
+                                                    })
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                            </div>
-                                
-                            </div>
+                            </div>     
+                        </div>
                     </div>
                 </div>
         
         </div> 
         <ActiveTicketModal ticketNo={passID} />
+        <ApprovalToCloseModal ticketNo={passID} handleReloadList={handleReloadList} />
         <UpdateTicketForm ticketNo={passID} handleReload={handleReloadList} />
     </div>
   )
