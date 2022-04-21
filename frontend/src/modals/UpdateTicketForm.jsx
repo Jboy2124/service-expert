@@ -27,6 +27,8 @@ const UpdateTicketForm = (props) => {
     const [getReason, setReason] = useState("");
     const [getDetails, setDetails] = useState("");
     const [getValidity, setValidity] = useState("");
+    // const [getReturnReason, setReturnReason] = useState("");
+    // const [getReturnRemarks, setReturnRemarks] = useState("");
     const [getSR, setSRList] = useState([]);
     
     const [srCategory, setSRCategory] = useState([]);
@@ -35,6 +37,20 @@ const UpdateTicketForm = (props) => {
         typeSRCategory: 0
     });
     const {typeSRSystem, typeSRCategory} = updateSR;
+    // const [ uamState, setUAMState ] = useState({
+    //     ticket_id: "", handled_by: 0, requested_by: "", email: "", department: "",
+    //     uam_category: 0, category_name: "", uam_system: 0, system_name: "", 
+    //     uam_operation: 0, operation_name: "", uam_validity: "", request_details: "",
+    //     request_reason: "", returned_reason: "", returned_remarks: ""
+    // });
+    // // const { ticket_id, handled_by, uam_category, uam_system, uam_operation, uam_validity, request_details, request_reason } = uamState;
+    // const { ticket_id, handled_by, uam_category } = uamState;
+
+
+
+
+
+
 
     useEffect(() => {
         getUAMList();
@@ -43,6 +59,9 @@ const UpdateTicketForm = (props) => {
     const getUAMList = async () => {
         const response = await axios.get(`/api/get_uam_to_update/${props.ticketNo}`);
         setUAM(response.data);
+        // setUAMState(response.data);
+        // fu = uamState.map(i => { return ( i.uam_category)});
+
         
         const result = await axios.get(`/api/get_sr_to_update/${props.ticketNo}`);
         setSRList(result.data);
@@ -79,7 +98,7 @@ const UpdateTicketForm = (props) => {
         setActPurpose(req_purpose);
 
     }
-
+    
     
     useEffect(() => {
         loadMisc();
@@ -115,12 +134,41 @@ const UpdateTicketForm = (props) => {
     let sr_system_name = getSR.map(i => i.system_name);
     
     
+    // const sampleHandle = (e) => {
+    //     e.preventDefault();
+    //     alert(uamState.map(i => i.ticket_id) +" = "+ uamState.map(i => i.uam_category) +"  === "+ uamState.map(i => i.category_name));
+    // }
+
+
+    // const handleResubmitUAMTicket = (event) => {
+    //     event.preventDefault();
+    //     // alert("Default Category: " + uamState.map(i => i.uam_category));
+    //     // axios.put(`/api/update_uam_ticket`, {
+    //     //     ticket_id, handled_by, uam_category, uam_system, 
+    //     //     uam_operation, uam_validity, request_details, request_reason
+    //     // }).then((response) => {
+    //     //     swal("Submitted", response.data.message, "success");
+    //     // });
+    //     // console.log(uamState.map(i => i.ticket_id) +"  category: "+ uamState.map());
+    //     alert(fu);
+    // }
+
+
+    // const handleChangeValues = (event) => {
+    //     const {name, value} = event.target;
+    //     setUAMState({...uamState, [name] : value});
+    // }
+
     const handleReSubmitTicket = (event) => {
         event.preventDefault();
         const id = props.ticketNo;
         const handled_by = getUAM.map((items) => {return (items.handled_by)});
+        const newCategory = (uamcategory == 0) ? getUAM.map(i => i.uam_category) : uamcategory;
+        const newSystem = (uamsystem == 0) ? getUAM.map(i => i.uam_system) : uamsystem;
+        const newOperation = (uamoperation == 0) ? getUAM.map(i => i.uam_operation) : uamoperation;
+
         axios.put(`/api/update_uam_ticket`, {
-            id, handled_by, uamcategory, uamsystem, uamoperation, getValidity, getDetails, getReason
+            id, handled_by, newCategory, newSystem, newOperation, getValidity, getDetails, getReason
         }).then((response) => {
             props.handleReload();
             setUpdateUAM({
@@ -144,13 +192,15 @@ const UpdateTicketForm = (props) => {
         e.preventDefault();
         const id = props.ticketNo;
         const handled_by = getSR.map(i => i.handled_by);
+        const newSRCategory = (typeSRCategory == 0) ? getSR.map(i => i.category_id) : typeSRCategory;
+        const newSRSystem = (typeSRSystem == 0) ? getSR.map(i => i.sr_system) : typeSRSystem;
         axios.put(`/api/update_sr_ticket`, {
-            id, handled_by, typeSRCategory, typeSRSystem, activity, actDetails, actStart, actEnd, actSeverity, actPurpose
+            id, handled_by, newSRCategory, newSRSystem, activity, actDetails, actStart, actEnd, actSeverity, actPurpose
         }).then((response) => {
             props.handleReload();
             setUpdateSR({
-                typeSRSystem: "",
-                typeSRCategory: ""
+                typeSRSystem: 0,
+                typeSRCategory: 0
             });
             swal("Re-Submit", response.data.message, "success");
         });
@@ -243,7 +293,7 @@ const UpdateTicketForm = (props) => {
                                 <div className="row mb-1">
                                     <label className="col-sm-3 form-label">UAM Category:</label>
                                     <div className="col-sm-9">
-                                        <select className="form-select" name='uamcategory' onChange={handleInputChange} aria-label="Default select">
+                                        <select className="form-select" name='uamcategory' onChange={handleInputChange} defaultValue={category_id_} aria-label="Default select">
                                             <option selected value={category_id_}>{category_}</option>
                                             {
                                                 category.map((items) => {
@@ -297,12 +347,24 @@ const UpdateTicketForm = (props) => {
                                       <input type="text" className="form-control" id="uamdetails" name='uamdetails' onChange={(e) => handleDataDetails(e.target.value)} value={getDetails} placeholder="Specify request details" required/>
                                     </div>
                                 </div>
-                                <div className="row mb-3">
+                                <div className="row mb-1">
                                     <label className="col-sm-3 form-label">Reason for request:  </label>
                                     <div className="col-sm-9">
                                       <input type="text" className="form-control" id="request_reason" name='request_reason' onChange={(e) => handleDataReason(e.target.value)} value={getReason}  placeholder="Specify reason for request" required></input>
                                     </div> 
-                                </div>                           
+                                </div>
+                                <div className="row mb-1">
+                                    <label className="col-sm-3 form-label">Return reason:  </label>
+                                    <div className="col-sm-9">
+                                      <input type="text" className="form-control" id="request_reason" name='returned_reason' value={getUAM.map((items) => { return (items.returned_reason) })}  placeholder="" disabled></input>
+                                    </div> 
+                                </div>
+                                <div className="row mb-3">
+                                    <label className="col-sm-3 form-label">Remarks:  </label>
+                                    <div className="col-sm-9">
+                                      <input type="text" className="form-control" id="request_reason" name='returned_remark' value={getUAM.map((i) => { return (i.returned_remarks) })}  placeholder="" disabled></input>
+                                    </div> 
+                                </div>              
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" className="btn buttonStyleGlobal" data-bs-dismiss="modal">Re-Submit Ticket</button>
@@ -413,9 +475,21 @@ const UpdateTicketForm = (props) => {
                                 </div>
                             </div>
                             <div className="row mb-1">
-                                <label for="" className="col-sm-3 form-label">Purpose:  </label>
+                                <label for="" className="col-sm-3 form-label">Purpose: </label>
                                 <div className="col-sm-9">
                                   <input type="text" className="form-control" name='srPurpose' id="" onChange={(e) => changeRequestPurpose(e.target.value)}  value={actPurpose} placeholder="Specify purpose of activity" required/>
+                                </div>
+                            </div>
+                            <div className="row mb-1">
+                                <label for="" className="col-sm-3 form-label">Return reason:</label>
+                                <div className="col-sm-9">
+                                  <input type="text" className="form-control" name='srReturnedReason' id="" value={getSR.map(i => i.returned_reason)} placeholder="" disabled/>
+                                </div>
+                            </div>
+                            <div className="row mb-3">
+                                <label for="" className="col-sm-3 form-label">Remarks:</label>
+                                <div className="col-sm-9">
+                                  <input type="text" className="form-control" name='srReturnedRemarks' id="" value={getSR.map(i => i.returned_remark)} placeholder="" disabled/>
                                 </div>
                             </div>
                             <div className="modal-footer">

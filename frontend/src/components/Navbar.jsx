@@ -48,9 +48,9 @@ const Navbar = (props) => {
                           <li className="list-inline-item">{time}</li>
                           <li className="list-inline-item">{date}</li>
                           <li className="list-inline-item"><i id='nav-bell' className="bi bi-bell position-relative">
-                          <span style={{ visibility: (roles == 2 && count >= 1) ? "visible" : "hidden" }} id='nav-badge' className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          {/* <span style={{ visibility: (roles == 2 && count >= 1) ? "visible" : "hidden" }} id='nav-badge' className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                               {cc}
-                            </span>
+                            </span> */}
                           </i>                     
                           </li>
                           <li className="list-inline-item"><i className="bi bi-person-circle"></i> {user_name} {user_role}</li>

@@ -21,6 +21,11 @@ const ActiveTicketModal = (props) => {
     }
 
 
+    const handleReloader = (e) => {
+        e.preventDefault();
+        getDataList();
+    }
+
     const handleCloseButton = (e) => {
         e.preventDefault();
         getDataList();

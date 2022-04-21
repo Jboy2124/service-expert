@@ -126,7 +126,7 @@ const ForApprovalTicket = (props) => {
                                     <td>{getForApproval.map((item) => { return (item.date_created) })}</td>
                                 </tr>
                                 <tr>
-                                    <th>Requesteor:</th>
+                                    <th>Requestor:</th>
                                     <td>{getForApproval.map((item) => { return (item.fullname) })}</td>
                                 </tr>
                                 <tr>
