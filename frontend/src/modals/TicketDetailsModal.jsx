@@ -10,21 +10,24 @@ const TicketDetailsModal = (props) => {
     const fileName = "closed_ticket_list"; // here enter filename for your excel file
     
     useEffect(() => {
-        axios.get(`/api/ticket_details_modal/${props.ticketNo}`).then((response) => {
-            setInfo(response.data);
-        });
+        getDataList();
+        fetchData();
     },[props.ticketNo]);
 
 
+    const getDataList = async (e) => {
+        e.preventDefault();
+        const response = await axios.get(`/api/ticket_details_modal/${props.ticketNo}`);
+        setInfo(response.data);
+    } 
 
 
-    useEffect(() => {
+    // useEffect(() => {
       const fetchData = () =>{
        axios.get('/api/download').then(r => setData(r.data))
       }
-
-      fetchData();
-    }, [])
+      
+    // }, [])
    
   return (
     <div>

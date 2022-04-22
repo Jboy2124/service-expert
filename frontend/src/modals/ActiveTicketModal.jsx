@@ -21,10 +21,10 @@ const ActiveTicketModal = (props) => {
     }
 
 
-    const handleReloader = (e) => {
-        e.preventDefault();
-        getDataList();
-    }
+    // const handleReloader = (e) => {
+    //     e.preventDefault();
+    //     getDataList();
+    // }
 
     const handleCloseButton = (e) => {
         e.preventDefault();
@@ -126,11 +126,11 @@ const ActiveTicketModal = (props) => {
                                 </tr>
                                 <tr>
                                     <th>Request Details:</th>
-                                    <td>{req_details}</td>
+                                    <td>{getUAMInfoList.map(items => items.request_details)}</td>
                                 </tr>
                                 <tr>
                                     <th>Reason for Request:</th>
-                                    <td>{req_reason}</td>
+                                    <td>{getUAMInfoList.map(items => items.request_reason)}</td>
                                 </tr>
                                 <tr>
                                     <th>Status:</th>

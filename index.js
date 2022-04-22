@@ -150,7 +150,7 @@ const sendEmailToApprover = (receiver_email, email_info, ticket_type) => {
     let mailOptions = {
         from: 'serviceXpert',
         to: receiver_email,
-        subject: "Ticket to Approved",
+        subject: "Ticket to Approve",
         html: (ticket_type == "UAM") ? uamEmailDesign(email_info) : srEmailDesign(email_info)
     }
     
@@ -1068,16 +1068,36 @@ app.put("/api/update_sr_ticket", (request, response) => {
 
 app.get("/api/get_sr_implemented/:id", (req,res) => {
     const id = req.params.id;
-    const query = `SELECT t.ticket_id, t.ticket_status, PROFILE_FULLNAME(t.requested_by) as fullname, 
+    // const query = `SELECT t.ticket_id, t.ticket_status, PROFILE_FULLNAME(t.requested_by) as fullname, 
+    //                 p.email, p.department, c.category_name, s.system_name, t.activity_name, 
+    //                 t.activity_details, DATE_FORMAT(t.activity_start, '%Y-%m-%dT%H:%i') as activity_start, 
+    //                 DATE_FORMAT(t.activity_end, '%Y-%m-%dT%H:%i') as activity_end, t.severity, t.purpose
+    //                 FROM type_sr_ticket t
+    //                 LEFT JOIN profile p ON t.requested_by = p.approver_id
+    //                 LEFT JOIN type_sr_category c ON t.sr_category = c.category_id
+    //                 LEFT JOIN ticket_system s ON t.sr_system = s.system_id
+    //                 WHERE t.ticket_id = ?`;
+    const query = `SELECT x.ticket_id, x.ticket_status, x.fullname, x.email, x.department, x.category_name, x.system_name, 
+                    x.activity_name, x.activity_details, x.activity_start, x.activity_end, x.severity, x.purpose, 
+                    i.reasons as returned_reason, i.remarks as returned_remarks 
+                    FROM 
+                    (SELECT t.ticket_id, t.ticket_status, PROFILE_FULLNAME(t.requested_by) as fullname, 
                     p.email, p.department, c.category_name, s.system_name, t.activity_name, 
                     t.activity_details, DATE_FORMAT(t.activity_start, '%Y-%m-%dT%H:%i') as activity_start, 
-                    DATE_FORMAT(t.activity_end, '%Y-%m-%dT%H:%i') as activity_end, t.severity, t.purpose
-                    FROM type_sr_ticket t
-                    LEFT JOIN profile p ON t.requested_by = p.approver_id
-                    LEFT JOIN type_sr_category c ON t.sr_category = c.category_id
-                    LEFT JOIN ticket_system s ON t.sr_system = s.system_id
-                    WHERE t.ticket_id = ?`;
-    db.query(query, id, (err, result) => {
+                    DATE_FORMAT(t.activity_end, '%Y-%m-%dT%H:%i') as activity_end, t.severity, t.purpose 
+                    FROM type_sr_ticket t 
+                    LEFT JOIN profile p ON t.requested_by = p.approver_id 
+                    LEFT JOIN type_sr_category c ON t.sr_category = c.category_id 
+                    LEFT JOIN ticket_system s ON t.sr_system = s.system_id 
+                    WHERE t.ticket_id = ?) x 
+                    LEFT JOIN (SELECT h.ticket_id, h.reasons, h.remarks 
+                                FROM ticket_status_history h 
+                                WHERE h.history_id = (SELECT MAX(history_id) 
+                                                        FROM ticket_status_history 
+                                                        WHERE ticket_id = ? 
+                                                        AND ticket_status='For Post Checking')) i 
+                                                        ON x.ticket_id = i.ticket_id`; 
+    db.query(query, [id, id], (err, result) => {
         if(err) {
             console.log("Error: ", err.message);
         } else {
@@ -1088,7 +1108,20 @@ app.get("/api/get_sr_implemented/:id", (req,res) => {
 
 app.get("/api/get_uam_implemented/:id", (request, response) => {
     const id = request.params.id;
-    const query = `SELECT t.ticket_id, t.ticket_type, PROFILE_FULLNAME(t.requested_by) as requested_by, 
+    // const query = `SELECT t.ticket_id, t.ticket_type, PROFILE_FULLNAME(t.requested_by) as requested_by, 
+    //                 p.email, p.department, c.category_name, s.system_name, o.operation_name, DATE_FORMAT(t.uam_validity,'%Y-%m-%dT%H:%i') as uam_validity,
+    //                 t.request_details, t.request_reason, t.ticket_status
+    //                 FROM type_uam_ticket t
+    //                 LEFT JOIN profile p ON t.requested_by = p.approver_id
+    //                 LEFT JOIN type_uam_category c ON t.uam_category = c.category_id
+    //                 LEFT JOIN ticket_system s ON t.uam_system = s.system_id
+    //                 LEFT JOIN type_uam_operation o ON t.uam_operation = o.operation_id
+    //                 WHERE t.ticket_id = ?`;
+    const query = `SELECT x.ticket_id, x.ticket_type, x.requested_by, x.email, x.department, x.category_name, x.system_name,
+                    x.operation_name, x.uam_validity, x.request_details, x.request_reason, x.ticket_status, 
+                    i.reasons as returned_reason, i.remarks as returned_remarks
+                    FROM 
+                    (SELECT t.ticket_id, t.ticket_type, PROFILE_FULLNAME(t.requested_by) as requested_by, 
                     p.email, p.department, c.category_name, s.system_name, o.operation_name, DATE_FORMAT(t.uam_validity,'%Y-%m-%dT%H:%i') as uam_validity,
                     t.request_details, t.request_reason, t.ticket_status
                     FROM type_uam_ticket t
@@ -1096,8 +1129,15 @@ app.get("/api/get_uam_implemented/:id", (request, response) => {
                     LEFT JOIN type_uam_category c ON t.uam_category = c.category_id
                     LEFT JOIN ticket_system s ON t.uam_system = s.system_id
                     LEFT JOIN type_uam_operation o ON t.uam_operation = o.operation_id
-                    WHERE t.ticket_id = ?`;
-    db.query(query, id, (err, result) => {
+                    WHERE t.ticket_id = 'UAM-001') x
+                    LEFT JOIN (SELECT h.ticket_id, h.reasons, h.remarks
+                                FROM ticket_status_history h 
+                                WHERE h.history_id = (SELECT MAX(history_id) 
+                                                        FROM ticket_status_history 
+                                                        WHERE ticket_id = 'UAM-001' 
+                                                        AND ticket_status='For Post Checking')) i
+                                                        ON x.ticket_id = i.ticket_id`;
+    db.query(query, [id, id], (err, result) => {
         if(err) {
             console.log("Error: ", err.message);
         } else {

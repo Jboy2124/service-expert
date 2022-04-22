@@ -26,7 +26,7 @@ const ApprovalToCloseModal = (props) => {
         switch (type) {
             case "UAM":
                 axios.put(`/api/submit_after_post_checking_uam/${props.ticketNo}/${stats}`).then((response) => {
-                    swal("Completed", response.data.message, "success");
+                    swal((stats == "Complete") ? "Complete" : "Implementation", response.data.message, "success");
                     props.handleReloadList();
                 });
                 break;
@@ -133,12 +133,18 @@ const ApprovalToCloseModal = (props) => {
                               <input type="text" className="form-control" id="uamdetails" name='uamdetails' value={state.map(items => { return(items.request_details) })} placeholder="Specify request details" required/>
                             </div>
                         </div>
-                        <div className="row mb-3">
+                        <div className="row mb-1">
                             <label className="col-sm-3 form-label">Reason for request:  </label>
                             <div className="col-sm-9">
                               <input type="text" className="form-control" id="request_reason" name='request_reason' value={state.map(items => { return(items.request_reason) })} placeholder="Specify reason for request" required />
                             </div> 
-                        </div>                           
+                        </div>    
+                        <div className="row mb-3">
+                            <label className="col-sm-3 form-label">Remarks:  </label>
+                            <div className="col-sm-9">
+                              <input type="text" className="form-control" id="checkingRemarks" name='request_reason' value={state.map(items => { return(items.returned_remarks) })} placeholder="" disabled />
+                            </div> 
+                        </div>                         
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={(e) => handleTicketStatus(e, "For Implementation", "UAM")} data-bs-dismiss="modal">Re-Submit</button>
                             <button type="submit" className="btn buttonStyleGlobal" onClick={(e) => handleTicketStatus(e, "Complete", "UAM")} data-bs-dismiss="modal">Complete</button>
@@ -252,6 +258,12 @@ const ApprovalToCloseModal = (props) => {
                         <label for="" className="col-sm-3 form-label">Purpose:  </label>
                         <div className="col-sm-9">
                           <input type="text" className="form-control" name='srPurpose' id="" value={srState.map(items => { return (items.purpose) })} placeholder="Specify purpose of activity" required/>
+                        </div>
+                    </div>
+                    <div className="row mb-3">
+                        <label for="" className="col-sm-3 form-label">Remarks:  </label>
+                        <div className="col-sm-9">
+                          <input type="text" className="form-control" name='srReturnedRemarks' id="" value={srState.map(items => { return (items.returned_remarks) })} placeholder="" disabled/>
                         </div>
                     </div>
                     <div className="modal-footer">
