@@ -24,7 +24,7 @@ const TicketDetailsModal = (props) => {
 
     // useEffect(() => {
       const fetchData = () =>{
-       axios.get('/api/download').then(r => setData(r.data))
+       axios.get(`/api/ticket_details_modal/${props.ticketNo}`).then(r => setData(r.data))
       }
       
     // }, [])
